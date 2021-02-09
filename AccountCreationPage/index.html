@@ -1,0 +1,108 @@
+<!--
+2/7/2021 -- Varun Shourie
+Added basic barebones template from online, tweaking some Bootstrap and HTML to better fit our design.
+I removed some redundant fields from templates while changing the look and feel slightly. 
+-->
+
+<!--
+2/8/2021 -- Jack Darr
+Restructure the page to match a new account creation page. Changed location field to not have "Select Country:" as a valid option. 
+Changed "New Password" to a password confirmation and added event handling for this confirmation. Deleted Security Information section.
+-->
+
+<!DOCTYPE HTML>
+<html lang="en-US">
+<title>Create Account</title>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container bootstrap snippets bootdeys">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12">
+				<form class="form-horizontal" method="POST">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">Create New User</h4>
+						</div>
+
+						<div class="panel-body">
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">Location</label>
+								<div class="col-xs-8 col-sm-10">
+									<select class="form-control" id="country-select">
+										<option value="none" selected disabled hidden>Select Country: </option>
+										<option>Canada</option>
+										<option>United States</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">Company Name</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="text" class="form-control" id="company-name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">First Name</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="text" class="form-control" id="first-name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">Last Name</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="text" class="form-control" id="last-name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">E-mail Address</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="email" class="form-control" id="email-address">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="col-xs-6 col-sm-4 control-label">Password</label>
+							<div class="col-xs-8 col-sm-10">
+								<input type="password" class="form-control" id="password" onkeyup="check()">
+							</div>
+						</div>
+					</div>
+
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="col-xs-6 col-sm-4 control-label">Confirm Password</label>
+							<div class="col-xs-8 col-sm-10">
+								<input type="password" class="form-control" id="confirmpassword" onkeyup="check()">
+								<span id='message'></span>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<span class="col-xs-4 col-sm-4 col-sm-offset-2">
+							<button type="submit" class="btn btn-success" id="submit-btn" onclick = "createAccount()">Submit</button>
+						</span>
+						<span class="col-xs-4 col-sm-4">
+							<button type="reset" class="btn btn-danger" id="cancel-btn">Cancel</button>
+						</span>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<script src="script.js"></script>
+</body>
+</html>
