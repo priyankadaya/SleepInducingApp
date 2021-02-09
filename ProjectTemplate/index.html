@@ -1,0 +1,118 @@
+<!--
+2/7/2021 -- Varun Shourie
+Added basic barebones template from online, tweaking some Bootstrap and HTML to better fit our design.
+I removed some redundant fields from templates while changing the look and feel slightly. 
+-->
+
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+<head>
+	<!-- Changed the version of Bootstrap CDN to most recent since the one in the template wasn't working. -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<!-- REFORMATTED AND REALIGNED CODE SINCE IT WAS EXTREMELY UGLY -->
+<body>
+	<div class="container bootstrap snippets bootdeys">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12">
+				<form class="form-horizontal" method="POST">
+					<!-- removed picture since it is extremely ugly -->
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">User Info</h4>
+						</div>
+
+						<div class="panel-body">
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">Location</label>
+								<div class="col-xs-8 col-sm-10">
+									<select class="form-control" id="country-select">
+										<option selected="">Select Country: </option>
+										<option>Canada</option>
+										<option>United States</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">Company Name</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="text" class="form-control" id="company-name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">First Name</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="text" class="form-control" id="first-name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">Last Name</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="text" class="form-control" id="last-name">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">E-mail Address</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="email" class="form-control" id="email-address">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">Security Information</h4>
+						</div>
+
+						<div class="panel-body">
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">Current Password</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="password" class="form-control" id="current-password">
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">New Password</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="password" class="form-control" id="new-password">
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-xs-10 col-sm-10 col-sm-offset-2">
+								<div class="checkbox">
+									<input type="checkbox" id="checkbox-1">
+									<label for="checkbox_1">Make this account an administrator</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<span class="col-xs-4 col-sm-4 col-sm-offset-2">
+								<button type="submit" class="btn btn-success" id="submit-btn" onclick = "editAccount()">Submit</button>
+							</span>
+							<span class="col-xs-4 col-sm-4">
+								<button type="reset" class="btn btn-danger" id="cancel-btn">Cancel</button>
+							</span>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<script src="script.js"></script>
+</body>
+</html>
