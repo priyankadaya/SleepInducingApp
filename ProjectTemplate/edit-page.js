@@ -7,7 +7,7 @@ function editAccount() {
 	var currentPword = document.getElementById("current-password").value;
 	var newPword = document.getElementById("new-password").value;
 	var checkbox =  document.getElementById("checkbox-1").checked;
-	var parameters = "{\"firstName\": \"" + encodeURI(lName) + "\","	
+	var parameters = "{\"firstName\": \"" + encodeURI(fName) + "\","	
 					 + "\"lastName\": \"" + encodeURI(lName) + "\","
 					 + "\"emailAddress\": \"" + encodeURI(email) + "\","
 					 + "\"currentPword\": \"" + encodeURI(currentPword) + "\","

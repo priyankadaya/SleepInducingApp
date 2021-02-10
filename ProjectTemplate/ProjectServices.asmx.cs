@@ -20,7 +20,9 @@ namespace ProjectTemplate
 	 * 2/9/2021
 	 * Added web services to update an account and validate correct password entry by the user for the edit page. 
 	 * 
-	 * 
+	 * 2/10/2021 
+	 * Varun S
+	 * Added web services for log on and log off functions.
 	 */
 
 	public class ProjectServices : System.Web.Services.WebService
@@ -37,6 +39,37 @@ namespace ProjectTemplate
 		}
 		////////////////////////////////////////////////////////////////////////
 
+		[WebMethod(EnableSession = true)]
+		public bool LogOn(string username, string password)
+		{
+			bool doCredentialsMatch = false;
+			string sqlQuery = "SELECT ID, IsAdmin FROM User WHERE Username=@username AND Password=@password";
+
+			MySqlConnection sqlConnection = new MySqlConnection(getConString());
+			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
+			sqlCommand.Parameters.AddWithValue("@password", HttpUtility.UrlDecode(password));
+
+			MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+			DataTable queryResults = new DataTable();
+			sqlDataAdapter.Fill(queryResults);
+
+			if (queryResults.Rows.Count == 1)
+			{
+				Session["ID"] = queryResults.Rows[0]["ID"];
+				Session["IsAdmin"] = queryResults.Rows[0]["IsAdmin"];
+				doCredentialsMatch = true;
+			}
+
+			return doCredentialsMatch;
+		}
+
+		[WebMethod(EnableSession = true)]
+		public bool LogOff()
+		{
+			Session.Abandon();
+			return true;
+		}
 
 
 		/////////////////////////////////////////////////////////////////////////
@@ -114,6 +147,7 @@ namespace ProjectTemplate
 		[WebMethod(EnableSession = true)]
 		private bool ValidateCurrentPword(string id, string currentPword)
 		{
+			bool pwordIsMatch = false;
 
 			// Establish a proper SQL query to be executed against the MySQL DB table.
 			string sqlQuery = "SELECT ID, Password FROM User WHERE ID=@Id AND Password=@currentPword";
@@ -131,10 +165,10 @@ namespace ProjectTemplate
 
 			if (queryResults.Rows.Count == 1)
 			{
-				return true;
+				pwordIsMatch = true;
 			}
 
-			return false;
+			return pwordIsMatch;
 		}
 	}
 }

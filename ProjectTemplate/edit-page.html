@@ -27,6 +27,7 @@ I removed some redundant fields from templates while changing the look and feel 
 						</div>
 
 						<div class="panel-body">
+							<!-- 
 							<div class="form-group">
 								<label class="col-xs-6 col-sm-4 control-label">Location</label>
 								<div class="col-xs-8 col-sm-10">
@@ -38,7 +39,8 @@ I removed some redundant fields from templates while changing the look and feel 
 										<option>United States</option>
 									</select>
 								</div>
-							</div>
+							</div> 
+							-->
 
 							<div class="form-group">
 								<label class="col-xs-6 col-sm-4 control-label">First Name</label>
@@ -70,6 +72,15 @@ I removed some redundant fields from templates while changing the look and feel 
 
 						<div class="panel-body">
 							<div class="form-group">
+								<label class="col-xs-6 col-sm-4 control-label">Username</label>
+								<div class="col-xs-8 col-sm-10">
+									<input type="text" class="form-control" id="current-username">
+								</div>
+							</div>
+						</div>
+
+						<div class="panel-body">
+							<div class="form-group">
 								<label class="col-xs-6 col-sm-4 control-label">Current Password</label>
 								<div class="col-xs-8 col-sm-10">
 									<input type="password" class="form-control" id="current-password">
@@ -94,12 +105,12 @@ I removed some redundant fields from templates while changing the look and feel 
 									<label for="checkbox_1">Make this account an administrator</label>
 								</div>
 							</div>
-						</div> 
+						</div>
 						-->
 
 						<div class="form-group">
 							<span class="col-xs-4 col-sm-4 col-sm-offset-2">
-								<button type="submit" class="btn btn-success" id="submit-btn" onclick = "editAccount()">Submit</button>
+								<button type="submit" class="btn btn-success" id="submit-btn" onclick="editAccount()">Submit</button>
 							</span>
 							<span class="col-xs-4 col-sm-4">
 								<button type="reset" class="btn btn-danger" id="cancel-btn">Cancel</button>
