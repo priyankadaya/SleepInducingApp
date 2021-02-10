@@ -10,6 +10,7 @@ I removed some redundant fields from templates while changing the look and feel 
 <head>
 	<!-- Changed the version of Bootstrap CDN to most recent since the one in the template wasn't working. -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<title>Edit Account</title>
 </head>
 
 <!-- REFORMATTED AND REALIGNED CODE SINCE IT WAS EXTREMELY UGLY -->
@@ -17,7 +18,7 @@ I removed some redundant fields from templates while changing the look and feel 
 	<div class="container bootstrap snippets bootdeys">
 		<div class="row">
 			<div class="col-xs-12 col-sm-12">
-				<form class="form-horizontal" method="POST">
+				<form class="form-horizontal">
 					<!-- removed picture since it is extremely ugly -->
 
 					<div class="panel panel-default">
@@ -30,17 +31,12 @@ I removed some redundant fields from templates while changing the look and feel 
 								<label class="col-xs-6 col-sm-4 control-label">Location</label>
 								<div class="col-xs-8 col-sm-10">
 									<select class="form-control" id="country-select">
-										<option selected="">Select Country: </option>
+										<option>Australia</option>
 										<option>Canada</option>
+										<option>Ireland</option>
+										<option>United Kingdom</option>
 										<option>United States</option>
 									</select>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-xs-6 col-sm-4 control-label">Company Name</label>
-								<div class="col-xs-8 col-sm-10">
-									<input type="text" class="form-control" id="company-name">
 								</div>
 							</div>
 
@@ -90,6 +86,7 @@ I removed some redundant fields from templates while changing the look and feel 
 							</div>
 						</div>
 
+						<!--
 						<div class="form-group">
 							<div class="col-xs-10 col-sm-10 col-sm-offset-2">
 								<div class="checkbox">
@@ -97,7 +94,8 @@ I removed some redundant fields from templates while changing the look and feel 
 									<label for="checkbox_1">Make this account an administrator</label>
 								</div>
 							</div>
-						</div>
+						</div> 
+						-->
 
 						<div class="form-group">
 							<span class="col-xs-4 col-sm-4 col-sm-offset-2">
@@ -113,6 +111,6 @@ I removed some redundant fields from templates while changing the look and feel 
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	<script src="script.js"></script>
+	<script src="edit-page.js"></script>
 </body>
 </html>

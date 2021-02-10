@@ -7,16 +7,14 @@ function editAccount() {
 	var currentPword = document.getElementById("current-password").value;
 	var newPword = document.getElementById("new-password").value;
 	var checkbox =  document.getElementById("checkbox-1").checked;
-	var parameters = "{\"companyName\": \"" + encodeURI(fName) + "\","
-					 + "\"firstName\": \"" + encodeURI(lName) + "\","	
+	var parameters = "{\"firstName\": \"" + encodeURI(lName) + "\","	
 					 + "\"lastName\": \"" + encodeURI(lName) + "\","
 					 + "\"emailAddress\": \"" + encodeURI(email) + "\","
 					 + "\"currentPword\": \"" + encodeURI(currentPword) + "\","
 					 + "\"newPword\": \"" + encodeURI(newPword) + "\","
 					 + "\"checkbox\": \"" + encodeURI(checkbox) + "\"";
 
-	console.log(`CompanyName: ${companyName}\n
-				First Name: ${fName}\n
+	console.log(`First Name: ${fName}\n
 				Last Name: ${lName}\n
 				Email: ${email}\n
 				Current Password: ${currentPword}\n

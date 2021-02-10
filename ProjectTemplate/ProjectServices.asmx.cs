@@ -14,21 +14,26 @@ namespace ProjectTemplate
 	[System.ComponentModel.ToolboxItem(false)]
 	[System.Web.Script.Services.ScriptService]
 
+
+	/*
+	 * Varun S 
+	 * 2/9/2021
+	 * Added web services to update an account and validate correct password entry by the user for the edit page. 
+	 * 
+	 * 
+	 */
+
 	public class ProjectServices : System.Web.Services.WebService
 	{
-		////////////////////////////////////////////////////////////////////////
-		///replace the values of these variables with your database credentials
-		////////////////////////////////////////////////////////////////////////
-		private string dbID = "cis440template";
-		private string dbPass = "!!Cis440";
-		private string dbName = "cis440template";
-		////////////////////////////////////////////////////////////////////////
+		private string userID = "group4spring2021";
+		private string dbPass = "spring2021group4";
+		private string dbName = "group4spring2021";
 		
 		////////////////////////////////////////////////////////////////////////
 		///call this method anywhere that you need the connection string!
 		////////////////////////////////////////////////////////////////////////
 		private string getConString() {
-			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName+"; UID=" + dbID + "; PASSWORD=" + dbPass;
+			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName+"; UID=" + userID + "; PASSWORD=" + dbPass;
 		}
 		////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +48,7 @@ namespace ProjectTemplate
 		{
 			try
 			{
-				string testQuery = "select * from test";
+				string testQuery = "select * from User";
 
 				////////////////////////////////////////////////////////////////////////
 				///here's an example of using the getConString method!
@@ -63,44 +68,73 @@ namespace ProjectTemplate
 			}
 		}
 
-		//EXAMPLE OF AN UPDATE QUERY WITH PARAMS PASSED IN
+
 		[WebMethod(EnableSession = true)]
-		public void UpdateAccount(string companyName, string firstName, string lastName, string emailAddress, 
-			string currentPword, string newPword, string checkbox)
+		public bool UpdateAccount(string userId, string firstName, string lastName, string emailAddress, 
+			string username, string currentPword, string newPword)
 		{
-			//WRAPPING THE WHOLE THING IN AN IF STATEMENT TO CHECK IF THEY ARE AN ADMIN!
-			if (Convert.ToInt32(Session["admin"]) == 1)
+			string sqlConnectString = getConString();
+
+			// If the current password is wrong, prevent the update from carrying on any further.
+			if (!ValidateCurrentPword(userId, currentPword))
 			{
-				string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
-				//this is a simple update, with parameters to pass in values
-				string sqlSelect = "update accounts set userid=@uidValue, pass=@passValue, firstname=@fnameValue, lastname=@lnameValue, " +
-					"email=@emailValue where id=@idValue";
+				return false;
+			}
 
-				MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
-				MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+			string sqlSelect = "update User set FirstName=@firstName, LastName=@lastName, " +
+				"Email=@emailAddress, Username=@username, Password=@newPword, DayLastUsed=CURDATE() where ID=@userId";
 
-				sqlCommand.Parameters.AddWithValue("@uidValue", HttpUtility.UrlDecode(companyName));
-				sqlCommand.Parameters.AddWithValue("@passValue", HttpUtility.UrlDecode(firstName));
-				sqlCommand.Parameters.AddWithValue("@fnameValue", HttpUtility.UrlDecode(lastName));
-				sqlCommand.Parameters.AddWithValue("@lnameValue", HttpUtility.UrlDecode(emailAddress));
-				sqlCommand.Parameters.AddWithValue("@emailValue", HttpUtility.UrlDecode(currentPword));
-				sqlCommand.Parameters.AddWithValue("@idValue", HttpUtility.UrlDecode(newPword));
+			MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+			MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
 
-				// TODO Checkbox is a boolean value -- change later
-				sqlCommand.Parameters.AddWithValue("@idValue", HttpUtility.UrlDecode(checkbox));
+			sqlCommand.Parameters.AddWithValue("@firstName", HttpUtility.UrlDecode(firstName));
+			sqlCommand.Parameters.AddWithValue("@lastName", HttpUtility.UrlDecode(lastName));
+			sqlCommand.Parameters.AddWithValue("@emailAddress", HttpUtility.UrlDecode(emailAddress));
+			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
+			sqlCommand.Parameters.AddWithValue("@newPword", HttpUtility.UrlDecode(newPword));
+			sqlCommand.Parameters.AddWithValue("@userId", HttpUtility.UrlDecode(userId));
 
-				sqlConnection.Open();
-				//we're using a try/catch so that if the query errors out we can handle it gracefully
-				//by closing the connection and moving on
-				try
-				{
-					sqlCommand.ExecuteNonQuery();
-				}
-				catch (Exception e)
-				{
-				}
+			sqlConnection.Open();
+			
+			try
+			{
+				sqlCommand.ExecuteNonQuery();
+				return true;
+			}
+			catch (Exception e)
+			{
+				return false;
+			}
+			finally
+			{
 				sqlConnection.Close();
 			}
+		}
+
+		[WebMethod(EnableSession = true)]
+		private bool ValidateCurrentPword(string id, string currentPword)
+		{
+
+			// Establish a proper SQL query to be executed against the MySQL DB table.
+			string sqlQuery = "SELECT ID, Password FROM User WHERE ID=@Id AND Password=@currentPword";
+			MySqlConnection sqlConnection = new MySqlConnection(getConString());
+			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+
+			// Ensures security of SQL query by preventing SQL injection.
+			sqlCommand.Parameters.AddWithValue("@Id", HttpUtility.UrlDecode(id));
+			sqlCommand.Parameters.AddWithValue("@currentPword", HttpUtility.UrlDecode(currentPword));
+
+			// Fill data set with query result checking if the user at ID Id has Password currentPword.
+			MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+			DataTable queryResults = new DataTable();
+			sqlDataAdapter.Fill(queryResults);
+
+			if (queryResults.Rows.Count == 1)
+			{
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

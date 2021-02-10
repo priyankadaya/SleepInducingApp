@@ -91,11 +91,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="index.html" />
+    <Content Include="edit-page.html" />
+    <Content Include="test.html" />
+    <Content Include="log-in.css" />
+    <Content Include="log-in.html" />
+    <Content Include="log-in.js" />
     <Content Include="ProjectServices.asmx" />
+    <Content Include="edit-page.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
