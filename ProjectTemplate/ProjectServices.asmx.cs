@@ -9,12 +9,6 @@ using System.Data;
 
 namespace ProjectTemplate
 {
-	[WebService(Namespace = "http://tempuri.org/")]
-	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-	[System.ComponentModel.ToolboxItem(false)]
-	[System.Web.Script.Services.ScriptService]
-
-
 	/*
 	 * Varun S 
 	 * 2/9/2021
@@ -25,6 +19,11 @@ namespace ProjectTemplate
 	 * Added web services for log on and log off functions.
 	 */
 
+
+	[WebService(Namespace = "http://tempuri.org/")]
+	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+	[System.ComponentModel.ToolboxItem(false)]
+	[System.Web.Script.Services.ScriptService]
 	public class ProjectServices : System.Web.Services.WebService
 	{
 		private string userID = "group4spring2021";
@@ -38,6 +37,63 @@ namespace ProjectTemplate
 			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName+"; UID=" + userID + "; PASSWORD=" + dbPass;
 		}
 		////////////////////////////////////////////////////////////////////////
+
+		[WebMethod(EnableSession = true)]
+		public Account[] GetAccounts()
+		{
+			if(Session["ID"] != null)
+			{
+				string sqlQuery = "SELECT ID, FirstName, LastName, Email, Username, Password, IsAdmin, " +
+					"DATE_FORMAT(DayLastUsed, '%m/%d/%Y') AS DayLastUsed2 FROM User " + "WHERE ID != @sessionID";
+
+				int sessionID = Convert.ToInt32(Session["ID"]);
+
+				MySqlConnection sqlConnection = new MySqlConnection(getConString());
+				MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+				sqlCommand.Parameters.AddWithValue("@sessionID", HttpUtility.UrlDecode(Convert.ToString(sessionID)));
+
+				MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+				DataTable queryResults = new DataTable("Accounts");
+				sqlDataAdapter.Fill(queryResults);
+
+				List<Account> accounts = new List<Account>();
+
+				for (int i = 0; i < queryResults.Rows.Count; i++)
+				{
+					if (Convert.ToInt32(Session["IsAdmin"]) == 1)
+					{
+						bool isUserAdmin = false;
+						
+						if (Convert.ToInt32(queryResults.Rows[i]["IsAdmin"]) != 0)
+						{
+							isUserAdmin = true;
+						}
+
+
+						accounts.Add(new Account
+						{
+							Id = Convert.ToInt32(queryResults.Rows[i]["ID"]),
+							FirstName = queryResults.Rows[i]["FirstName"].ToString(),
+							LastName = queryResults.Rows[i]["LastName"].ToString(),
+							Email = queryResults.Rows[i]["Email"].ToString(),
+							Username = queryResults.Rows[i]["Username"].ToString(),
+							IsAdmin = isUserAdmin,
+							DayLastUsed = DateTime.Parse(queryResults.Rows[i]["DayLastUsed2"].ToString())
+						});
+					}
+					else
+					{
+						accounts.Add(null);
+					}
+				}
+
+				return accounts.ToArray();
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		[WebMethod(EnableSession = true)]
 		public bool LogOn(string username, string password)

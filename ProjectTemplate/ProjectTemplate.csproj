@@ -98,6 +98,8 @@
     <Content Include="log-in.js" />
     <Content Include="ProjectServices.asmx" />
     <Content Include="edit-page.js" />
+    <Content Include="view-accounts.html" />
+    <Content Include="view-accounts.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
