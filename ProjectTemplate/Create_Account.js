@@ -17,7 +17,7 @@ function createAccount() {
 			Email: ${email}\n
 			Password: ${password}`);
 
-	///window.location.href=
+	///window.location.assign("log-in.html")
 }
 
 var check = function() {
