@@ -1,6 +1,6 @@
 // Created by Connor Holmes
 function attemptLogin() {
-    const url = ''
+    const url = 'ProjectServices.asmx/LogOn'
     const data = {
         username: document.getElementById('username-entry').value,
         password: document.getElementById('password-entry').value
