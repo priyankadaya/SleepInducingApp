@@ -90,6 +90,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Create_Account.html" />
+    <Content Include="Create_Account.js" />
     <Content Include="Global.asax" />
     <Content Include="edit-page.html" />
     <Content Include="test.html" />

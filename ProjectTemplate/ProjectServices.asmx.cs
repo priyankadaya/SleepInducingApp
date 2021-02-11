@@ -96,6 +96,44 @@ namespace ProjectTemplate
 		}
 
 		[WebMethod(EnableSession = true)]
+		public Account GetAccount()
+		{
+			if (Session["ID"] != null)
+			{
+				string sqlQuery = "SELECT ID, FirstName, LastName, Email, Username, Password " +
+					"FROM User " + "WHERE ID = @sessionID";
+				int sessionID = Convert.ToInt32(Session["ID"]);
+				MySqlConnection sqlConnection = new MySqlConnection(getConString());
+				MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+				sqlCommand.Parameters.AddWithValue("@sessionID", HttpUtility.UrlDecode(Convert.ToString(sessionID)));
+
+				MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+				DataTable queryResults = new DataTable("Accounts");
+				sqlDataAdapter.Fill(queryResults);
+
+
+				if (queryResults.Rows.Count == 1)
+				{
+					return new Account
+					{
+						Id = Convert.ToInt32(queryResults.Rows[0]["ID"]),
+						FirstName = queryResults.Rows[0]["FirstName"].ToString(),
+						LastName = queryResults.Rows[0]["LastName"].ToString(),
+						Email = queryResults.Rows[0]["Email"].ToString(),
+						Username = queryResults.Rows[0]["Username"].ToString(),
+					};
+				}
+				else
+				{
+					return null;
+				}
+			}
+
+			return null;
+
+		}
+
+		[WebMethod(EnableSession = true)]
 		public bool LogOn(string username, string password)
 		{
 			bool doCredentialsMatch = false;

@@ -1,25 +1,41 @@
+
+
+$(document).ready(function () {
+	alert('Window has loaded.');
+	var webMethod = "ProjectServices.asmx/GetAccount";
+
+	$.ajax({
+		type: "POST",
+		url: webMethod,
+		data: "{}",
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		success: function (msg) {
+			var responseFromServer = msg.d;
+
+			$("#first-name").val(responseFromServer.FirstName);
+			$("#last-name").val(responseFromServer.LastName);
+			$("#email-address").val(responseFromServer.Email);
+			$("#current-username").val(responseFromServer.Username);
+		},
+		error: function (e) {
+			alert("Something went wrong...");
+		}
+	});
+});
+
 function editAccount() {
-	var webMethod = "ProjectServices.asmx/EditAccount";
-	var companyName = document.getElementById("company-name").value;
+	var webMethod = "ProjectServices.asmx/UpdateAccount";
 	var fName = document.getElementById("first-name").value;
 	var lName = document.getElementById("last-name").value;
 	var email = document.getElementById("email-address").value;
 	var currentPword = document.getElementById("current-password").value;
 	var newPword = document.getElementById("new-password").value;
-	var checkbox =  document.getElementById("checkbox-1").checked;
 	var parameters = "{\"firstName\": \"" + encodeURI(fName) + "\","	
 					 + "\"lastName\": \"" + encodeURI(lName) + "\","
 					 + "\"emailAddress\": \"" + encodeURI(email) + "\","
 					 + "\"currentPword\": \"" + encodeURI(currentPword) + "\","
-					 + "\"newPword\": \"" + encodeURI(newPword) + "\","
-					 + "\"checkbox\": \"" + encodeURI(checkbox) + "\"";
-
-	console.log(`First Name: ${fName}\n
-				Last Name: ${lName}\n
-				Email: ${email}\n
-				Current Password: ${currentPword}\n
-				New Password: ${newPword}\n
-				Checkbox: ${checkbox}`);
+					 + "\"newPword\": \"" + encodeURI(newPword) + "\"";
 
 	// var editAjaxCall = //jQuery ajax method
 	// $.ajax({
