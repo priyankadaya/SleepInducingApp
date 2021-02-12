@@ -197,7 +197,7 @@ namespace ProjectTemplate
 
 
 		[WebMethod(EnableSession = true)]
-		public bool UpdateAccount(string userId, string firstName, string lastName, string emailAddress, 
+		public string UpdateAccount(string userId, string firstName, string lastName, string emailAddress, 
 			string username, string currentPword, string newPword)
 		{
 			string sqlConnectString = getConString();
@@ -205,7 +205,17 @@ namespace ProjectTemplate
 			// If the current password is wrong, prevent the update from carrying on any further.
 			if (!ValidateCurrentPword(userId, currentPword))
 			{
-				return false;
+				return "Incorrect password.";
+			}
+
+			if (ValidateEmail(userId, emailAddress))
+			{
+				return "This email is already associated with an account.";
+			}
+
+			if(ValidateUsername(userId, username))
+			{
+				return "This username is already associated with an account.";
 			}
 
 			string sqlSelect = "update User set FirstName=@firstName, LastName=@lastName, " +
@@ -226,11 +236,11 @@ namespace ProjectTemplate
 			try
 			{
 				sqlCommand.ExecuteNonQuery();
-				return true;
+				return "Successfully completed.";
 			}
 			catch (Exception e)
 			{
-				return false;
+				return "Error.";
 			}
 			finally
 			{
@@ -244,7 +254,7 @@ namespace ProjectTemplate
 			bool pwordIsMatch = false;
 
 			// Establish a proper SQL query to be executed against the MySQL DB table.
-			string sqlQuery = "SELECT ID, Password FROM User WHERE ID=@Id AND Password=@currentPword";
+			string sqlQuery = "SELECT ID, Password FROM User WHERE ID =@Id AND Password = @currentPword";
 			MySqlConnection sqlConnection = new MySqlConnection(getConString());
 			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
 
@@ -263,6 +273,60 @@ namespace ProjectTemplate
 			}
 
 			return pwordIsMatch;
+		}
+
+		[WebMethod(EnableSession = true)]
+		private bool ValidateEmail(string id, string email)
+		{
+			bool emailExists = false;
+
+			// Establish a proper SQL query to be executed against the MySQL DB table.
+			string sqlQuery = "SELECT Email FROM User WHERE Email = @email AND ID != @id";
+			MySqlConnection sqlConnection = new MySqlConnection(getConString());
+			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+
+			// Ensures security of SQL query by preventing SQL injection.
+			sqlCommand.Parameters.AddWithValue("@email", HttpUtility.UrlDecode(email));
+			sqlCommand.Parameters.AddWithValue("@id", HttpUtility.UrlDecode(id));
+
+			// Fill data set with query result checking if the email is taken.
+			MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+			DataTable queryResults = new DataTable();
+			sqlDataAdapter.Fill(queryResults);
+
+			if (queryResults.Rows.Count > 0)
+			{
+				emailExists = true;
+			}
+
+			return emailExists;
+		}
+
+		[WebMethod(EnableSession = true)]
+		private bool ValidateUsername(string id, string username)
+		{
+			bool usernameExists = false;
+
+			// Establish a proper SQL query to be executed against the MySQL DB table.
+			string sqlQuery = "SELECT Username FROM User WHERE Username=@username AND ID != @id";
+			MySqlConnection sqlConnection = new MySqlConnection(getConString());
+			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+
+			// Ensures security of SQL query by preventing SQL injection.
+			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
+			sqlCommand.Parameters.AddWithValue("@id", HttpUtility.UrlDecode(id));
+
+			// Fill data set with query result checking if the username is taken.
+			MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+			DataTable queryResults = new DataTable();
+			sqlDataAdapter.Fill(queryResults);
+
+			if (queryResults.Rows.Count > 0)
+			{
+				usernameExists = true;
+			}
+
+			return usernameExists;
 		}
 	}
 }
