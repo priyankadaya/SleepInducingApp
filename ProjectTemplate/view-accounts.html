@@ -8,22 +8,28 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
+    <br />
     <p class="h3 text-center">View Accounts</p>
+    <hr />
+
+    <p class="text-center">
+        <button type="button" onclick="toggleToInactive()" class="btn btn-primary col-xs-3 col-sm-3" id="toggle-button">
+            Toggle User Type
+        </button>
+    </p>
 
     <div class="container">
-        <div class="row">
-            <div class="col-xs-6 col-sm-6">
-                <p class="h6 text-center">Active Accounts</p>
-                <div class="container" id="active-account-container">
+        <div class="col-xs-12 col-sm-12" id="active-account-container">
+            <p class="h5 text-center">Active Accounts</p>
+            <div class="container" id="active-accounts">
 
-                </div>
             </div>
-            <div class="col-xs-6 col-sm-6">
-                <p class="h6 text-center">Inactive Accounts</p>
-                <div class="container" id="inactive-account-container">
+        </div>
+        <div class="col-xs-12 col-sm-12" id="inactive-account-container">
+             <p class="h5 text-center">Inactive Accounts</p>
+             <div class="container" id="inactive-accounts">
 
-                </div>
-            </div>
+             </div>
         </div>
     </div>
     <script src="view-accounts.js"></script>

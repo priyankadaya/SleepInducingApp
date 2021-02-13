@@ -38,11 +38,15 @@ namespace ProjectTemplate
 		}
 		////////////////////////////////////////////////////////////////////////
 
+		//TODO - write delete web service.
+
 		[WebMethod(EnableSession = true)]
-		public Account[] GetAccounts()
+		public Account[][] GetAccounts()
 		{
+			// Check whether if the user is logged in or not. If not, return nothing.
 			if(Session["ID"] != null)
 			{
+				// Exclude the admin who is performing the view operation.
 				string sqlQuery = "SELECT ID, FirstName, LastName, Email, Username, Password, IsAdmin, " +
 					"DATE_FORMAT(DayLastUsed, '%m/%d/%Y') AS DayLastUsed2 FROM User " + "WHERE ID != @sessionID";
 
@@ -56,21 +60,24 @@ namespace ProjectTemplate
 				DataTable queryResults = new DataTable("Accounts");
 				sqlDataAdapter.Fill(queryResults);
 
-				List<Account> accounts = new List<Account>();
+				List<List<Account>> allAccounts = new List<List<Account>>();
+				List<Account> activeAccounts = new List<Account>();
+				List<Account> inactiveAccounts = new List<Account>();
 
 				for (int i = 0; i < queryResults.Rows.Count; i++)
 				{
+					// Only admins can view the account list, no one else.
 					if (Convert.ToInt32(Session["IsAdmin"]) == 1)
 					{
 						bool isUserAdmin = false;
 						
+						// Converts tiny int storage in database to boolean flag value
 						if (Convert.ToInt32(queryResults.Rows[i]["IsAdmin"]) != 0)
 						{
 							isUserAdmin = true;
 						}
 
-
-						accounts.Add(new Account
+						Account tmpAccount = new Account
 						{
 							Id = Convert.ToInt32(queryResults.Rows[i]["ID"]),
 							FirstName = queryResults.Rows[i]["FirstName"].ToString(),
@@ -79,15 +86,24 @@ namespace ProjectTemplate
 							Username = queryResults.Rows[i]["Username"].ToString(),
 							IsAdmin = isUserAdmin,
 							DayLastUsed = DateTime.Parse(queryResults.Rows[i]["DayLastUsed2"].ToString())
-						});
+						};
+
+						if (tmpAccount.DaysInactive >= 11)
+						{
+							activeAccounts.Add(tmpAccount);
+						}
+						else inactiveAccounts.Add(tmpAccount);
+
 					}
 					else
 					{
-						accounts.Add(null);
+						allAccounts.Add(null);
 					}
 				}
 
-				return accounts.ToArray();
+				allAccounts.Add(activeAccounts);
+				allAccounts.Add(inactiveAccounts);
+				return allAccounts.Select(lst => lst.ToArray()).ToArray();
 			}
 			else
 			{

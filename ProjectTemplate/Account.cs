@@ -14,6 +14,7 @@ namespace ProjectTemplate
      */
     public class Account
     {
+        private DateTime dayLastUsed;
 
         public int Id { get; set; }
         public string FirstName { get; set; }
@@ -22,7 +23,23 @@ namespace ProjectTemplate
         public string Username { get; set; }
         public string Password { get; set; }
         public bool IsAdmin { get; set; }
-        public DateTime DayLastUsed { get; set; }
+        public DateTime DayLastUsed 
+        { 
+            get { return dayLastUsed;  }
+            
+            set
+            {
+                dayLastUsed = value;
+                DaysInactive = CalculateTimeDifference(DateTime.Now, DayLastUsed);
+            }
+        }
+        public double DaysInactive { get; set; }
+
+        private int CalculateTimeDifference(DateTime timeOne, DateTime timeTwo)
+        {
+            TimeSpan difference = timeOne - timeTwo;
+            return difference.Days;
+        }
 
     }
 }
