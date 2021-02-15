@@ -13,7 +13,30 @@ function checkIfAdmin(boolFlag) {
 }
 
 function deleteAccount(id) {
-    // TODO - do backend web service for deletion and allow manual deletes. 
+    var webMethod = "ProjectServices.asmx/DeleteAccount";
+
+    if (confirm("Do you want to delete the selected user's account?")) {
+        $.ajax({
+            type: "POST",
+            url: webMethod,
+            data: `{"id": "${id}"}`,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+                var responseFromServer = msg.d;
+
+                if (!responseFromServer) {
+                    alert("Account deletion not successful.");
+                }
+                else {
+                    $(`#acct${id}`).remove();
+                }
+            },
+            error: function (e) {
+                alert("Something went wrong...");
+            }
+        });
+    }
 }
 
 function loadAccounts() {
@@ -26,10 +49,10 @@ function loadAccounts() {
         dataType: "json",
         success: function (msg) {
             if (msg.d.length > 0) {
-                accountsArray = msg.d;
+                allAccounts = msg.d;
 
-                populateAccounts(accountsArray[0], "#inactive-accounts");
-                populateAccounts(accountsArray[1], "#active-accounts");
+                populateAccounts(allAccounts[0], "#inactive-accounts");
+                populateAccounts(allAccounts[1], "#active-accounts");
             }
         },
         error: function (e) {
@@ -49,12 +72,12 @@ function populateAccounts(accountsArray, accountContainer) {
                     <p><strong>Email Address</strong>: ${accountsArray[i].Email} | 
                     <strong>Username</strong>: ${accountsArray[i].Username}</p>
                     <p><strong>Days Inactive</strong>: ${accountsArray[i].DaysInactive}</p>
+                    <hr>
                     </div>
                     <div class='col-xs-4 col-sm-4'>
-                    <button type='button' onclick='DeleteAccount(${accountsArray[i].Id})' class='btn btn-danger'>Delete</button>
+                    <button type='button' onclick='deleteAccount(${accountsArray[i].Id})' class='btn btn-danger'>Delete</button>
                     </div>
-                    </div>
-                    <hr>`
+                    </div>`
             $(accountContainer).append(acct);
         }
     }

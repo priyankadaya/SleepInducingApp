@@ -39,6 +39,35 @@ namespace ProjectTemplate
 		////////////////////////////////////////////////////////////////////////
 
 		//TODO - write delete web service.
+		[WebMethod(EnableSession = true)]
+		public bool DeleteAccount(string id)
+		{
+			if (Session["ID"] != null)
+			{
+				string sqlDeletion = "DELETE FROM User WHERE ID=@id";
+
+				MySqlConnection sqlConnection = new MySqlConnection(getConString());
+				MySqlCommand sqlCommand = new MySqlCommand(sqlDeletion, sqlConnection);
+
+				sqlCommand.Parameters.AddWithValue("@id", HttpUtility.UrlDecode(id));
+
+				sqlConnection.Open();
+				try
+				{
+					sqlCommand.ExecuteNonQuery();
+					return true;
+				}
+				catch (Exception e)
+				{
+					return false;
+				}
+				finally
+				{
+					sqlConnection.Close();
+				}
+			}
+			else return false;
+		}
 
 		[WebMethod(EnableSession = true)]
 		public Account[][] GetAccounts()
@@ -88,7 +117,7 @@ namespace ProjectTemplate
 							DayLastUsed = DateTime.Parse(queryResults.Rows[i]["DayLastUsed2"].ToString())
 						};
 
-						if (tmpAccount.DaysInactive >= 11)
+						if (tmpAccount.DaysInactive >= 10)
 						{
 							activeAccounts.Add(tmpAccount);
 						}
@@ -103,7 +132,14 @@ namespace ProjectTemplate
 
 				allAccounts.Add(activeAccounts);
 				allAccounts.Add(inactiveAccounts);
-				return allAccounts.Select(lst => lst.ToArray()).ToArray();
+				try
+				{
+					return allAccounts.Select(lst => lst.ToArray()).ToArray();
+				}
+				catch (Exception e)
+				{
+					return null;
+				}
 			}
 			else
 			{
@@ -216,52 +252,58 @@ namespace ProjectTemplate
 		public string UpdateAccount(string userId, string firstName, string lastName, string emailAddress, 
 			string username, string currentPword, string newPword)
 		{
-			string sqlConnectString = getConString();
-
-			// If the current password is wrong, prevent the update from carrying on any further.
-			if (!ValidateCurrentPword(userId, currentPword))
+			if (Session["ID"] != null)
 			{
-				return "Incorrect password.";
+				string sqlConnectString = getConString();
+
+				// If the current password is wrong, prevent the update from carrying on any further.
+				if (!ValidateCurrentPword(userId, currentPword))
+				{
+					return "Incorrect password.";
+				}
+
+				if (ValidateEmail(userId, emailAddress))
+				{
+					return "This email is already associated with an account.";
+				}
+
+				if (ValidateUsername(userId, username))
+				{
+					return "This username is already associated with an account.";
+				}
+
+				string sqlSelect = "update User set FirstName=@firstName, LastName=@lastName, " +
+					"Email=@emailAddress, Username=@username, Password=@newPword, DayLastUsed=CURDATE() where ID=@userId";
+
+				MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+				MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+				sqlCommand.Parameters.AddWithValue("@firstName", HttpUtility.UrlDecode(firstName));
+				sqlCommand.Parameters.AddWithValue("@lastName", HttpUtility.UrlDecode(lastName));
+				sqlCommand.Parameters.AddWithValue("@emailAddress", HttpUtility.UrlDecode(emailAddress));
+				sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
+				sqlCommand.Parameters.AddWithValue("@newPword", HttpUtility.UrlDecode(newPword));
+				sqlCommand.Parameters.AddWithValue("@userId", HttpUtility.UrlDecode(userId));
+
+				sqlConnection.Open();
+
+				try
+				{
+					sqlCommand.ExecuteNonQuery();
+					return "Successfully completed.";
+				}
+				catch (Exception e)
+				{
+					return "Error.";
+				}
+				finally
+				{
+					sqlConnection.Close();
+				}
 			}
 
-			if (ValidateEmail(userId, emailAddress))
-			{
-				return "This email is already associated with an account.";
-			}
-
-			if(ValidateUsername(userId, username))
-			{
-				return "This username is already associated with an account.";
-			}
-
-			string sqlSelect = "update User set FirstName=@firstName, LastName=@lastName, " +
-				"Email=@emailAddress, Username=@username, Password=@newPword, DayLastUsed=CURDATE() where ID=@userId";
-
-			MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
-			MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
-
-			sqlCommand.Parameters.AddWithValue("@firstName", HttpUtility.UrlDecode(firstName));
-			sqlCommand.Parameters.AddWithValue("@lastName", HttpUtility.UrlDecode(lastName));
-			sqlCommand.Parameters.AddWithValue("@emailAddress", HttpUtility.UrlDecode(emailAddress));
-			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
-			sqlCommand.Parameters.AddWithValue("@newPword", HttpUtility.UrlDecode(newPword));
-			sqlCommand.Parameters.AddWithValue("@userId", HttpUtility.UrlDecode(userId));
-
-			sqlConnection.Open();
+			return "Not logged in.";
 			
-			try
-			{
-				sqlCommand.ExecuteNonQuery();
-				return "Successfully completed.";
-			}
-			catch (Exception e)
-			{
-				return "Error.";
-			}
-			finally
-			{
-				sqlConnection.Close();
-			}
 		}
 
 		[WebMethod(EnableSession = true)]
