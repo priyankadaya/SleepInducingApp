@@ -35,7 +35,7 @@ namespace ProjectTemplate
         }
         public double DaysInactive { get; set; }
 
-        private int CalculateTimeDifference(DateTime timeOne, DateTime timeTwo)
+        private static int CalculateTimeDifference(DateTime timeOne, DateTime timeTwo)
         {
             TimeSpan difference = timeOne - timeTwo;
             return difference.Days;
