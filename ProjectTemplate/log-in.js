@@ -21,15 +21,16 @@ function getBrightness() {
 
 function attemptLogin() {
     const url = 'ProjectServices.asmx/LogOn'
-    const data = {
+    var data = {
         username: document.getElementById('username-entry').value,
         password: document.getElementById('password-entry').value
     }
+    formattedData = JSON.stringify(data);
     axios({
         method: 'post',
         url: url,
-        data: data
-    }).then(data => console.log(data)).catch(err => alert('Error\n' + err));
+        data: formattedData
+    }).then(data => console.log(data) && alert('Log-in Successful')).catch(err => alert('Error\n' + err));
 }
 
 getBrightness();
