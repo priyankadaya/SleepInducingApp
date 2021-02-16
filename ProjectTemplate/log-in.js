@@ -3,16 +3,18 @@
 // Used for determing background brightness
 // Day = light
 // Night = dark
+
 function getBrightness() {
     // Returns hours as an int between 0 and 23
     function getTimeOfDay() {
         var d = new Date();
         return d.getHours();
     }
-    if (getTimeOfDay() > 5 || getTimeOfDay() < 19) {
-        document.getElementsByName('body').style.filter = "brightness(1.75)";
+    var timeOfDay = getTimeOfDay();
+    if (timeOfDay > 5 || timeOfDay < 19) {
+        document.getElementById('body').style.filter = "brightness(1.75)";
     } else {
-        document.getElementsByName('body').style.filter = "brightness(50%)";
+        document.getElementById('body').style.filter = "brightness(50%)";
     }
 }
 
