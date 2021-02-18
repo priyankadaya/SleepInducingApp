@@ -24,7 +24,6 @@ function getBrightness() {
 }
 
 function attemptLogin() {
-    navigateToMainSite();
     const url = 'ProjectServices.asmx/LogOn'
     var username = document.getElementById('username-entry').value;
     var password = document.getElementById('password-entry').value;
@@ -32,11 +31,6 @@ function attemptLogin() {
             username: document.getElementById('username-entry').value,
             password: document.getElementById('password-entry').value
         }
-        // axios({
-        //     method: 'post',
-        //     url: url,
-        //     data: JSON.stringify(data)
-        // }).then(data => console.log(data) && alert('Log-in Successful') && navigateToSite()).catch(err => alert('Error\n' + err));
     $.ajax({
         type: "POST",
         url: url,
