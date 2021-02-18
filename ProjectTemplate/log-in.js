@@ -5,8 +5,8 @@
 // Night = dark
 
 // Called after successful log-in
-function navigateToSite() {
-
+function navigateToMainSite() {
+    window.location.pathname = '/sounds.html'
 }
 
 function getBrightness() {
@@ -23,8 +23,8 @@ function getBrightness() {
     }
 }
 
-
 function attemptLogin() {
+    navigateToMainSite();
     const url = 'ProjectServices.asmx/LogOn'
     var data = {
         username: document.getElementById('username-entry').value,
@@ -38,13 +38,12 @@ function attemptLogin() {
         data: JSON.stringify(data),
         success: function(msg) {
             alert('log-in succesful')
+            navigateToMainSite();
         },
         error: function(e) {
             alert('Something went seriously wrong.');
         }
     });
-
 }
-
 
 getBrightness();
