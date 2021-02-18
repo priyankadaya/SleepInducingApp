@@ -26,12 +26,8 @@ function getBrightness() {
 
 function attemptLogin() {
     const url = 'ProjectServices.asmx/LogOn'
-    var username = document.getElementById('username-entry').value;
-    var password = document.getElementById('password-entry').value;
-    var data = {
-            username: document.getElementById('username-entry').value,
-            password: document.getElementById('password-entry').value
-        }
+    var params = `{"username": "${document.getElementById('username-entry').value}",
+                   "password": "${document.getElementById('password-entry').value}"}`
         // axios({
         //     method: 'post',
         //     url: url,
@@ -42,7 +38,7 @@ function attemptLogin() {
         url: url,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        data: data,
+        data: params,
         success: function(msg) {
             alert('log-in succesful')
         },
