@@ -26,23 +26,17 @@ function getBrightness() {
 
 function attemptLogin() {
     const url = 'ProjectServices.asmx/LogOn'
-    var username = document.getElementById('username-entry').value;
-    var password = document.getElementById('password-entry').value;
     var data = {
-            username: document.getElementById('username-entry').value,
-            password: document.getElementById('password-entry').value
-        }
-        // axios({
-        //     method: 'post',
-        //     url: url,
-        //     data: JSON.stringify(data)
-        // }).then(data => console.log(data) && alert('Log-in Successful') && navigateToSite()).catch(err => alert('Error\n' + err));
+        username: document.getElementById('username-entry').value,
+        password: document.getElementById('password-entry').value
+    }
+
     $.ajax({
         type: "POST",
         url: url,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        data: data,
+        data: JSON.stringify(data),
         success: function(msg) {
             alert('log-in succesful')
         },
