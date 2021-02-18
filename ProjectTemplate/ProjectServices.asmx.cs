@@ -33,7 +33,7 @@ namespace ProjectTemplate
 		////////////////////////////////////////////////////////////////////////
 		///call this method anywhere that you need the connection string!
 		////////////////////////////////////////////////////////////////////////
-		private string getConString() {
+		private string GetConString() {
 			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName+"; UID=" + userID + "; PASSWORD=" + dbPass;
 		}
 		////////////////////////////////////////////////////////////////////////
@@ -209,19 +209,19 @@ namespace ProjectTemplate
 
 		}
 
-        [WebMethod(EnableSession = true)]
+		[WebMethod(EnableSession = true)]
 		public bool CheckAdmin()
-        {
+		{
 			bool admin = false;
 			
 			int check = Convert.ToInt32(Session["IsAdmin"]);
 
-            if (check == 1)
-            {
+			if (check == 1)
+			{
 				admin = true;
-            }
-				return admin;
-        }		
+			}
+			return admin;
+		}		
 
 		[WebMethod(EnableSession = true)]
 		public bool LogOn(string username, string password)
@@ -245,10 +245,10 @@ namespace ProjectTemplate
 				doCredentialsMatch = true;
 				UpdateLogOn();
 
-				//if (Convert.ToInt32(Session["IsAdmin"]) == 1)
-				//{
-				//	DeleteInactiveAccounts();
-				//}
+				if (Convert.ToInt32(Session["IsAdmin"]) == 1)
+				{
+					DeleteInactiveAccounts();
+				}
 			}
 
 			return doCredentialsMatch;
