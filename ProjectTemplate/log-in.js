@@ -30,7 +30,6 @@ function attemptLogin() {
         username: document.getElementById('username-entry').value,
         password: document.getElementById('password-entry').value
     }
-
     $.ajax({
         type: "POST",
         url: url,
