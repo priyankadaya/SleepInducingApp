@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="audio_player\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>

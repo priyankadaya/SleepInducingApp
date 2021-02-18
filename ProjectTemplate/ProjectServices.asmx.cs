@@ -33,7 +33,7 @@ namespace ProjectTemplate
 		////////////////////////////////////////////////////////////////////////
 		///call this method anywhere that you need the connection string!
 		////////////////////////////////////////////////////////////////////////
-		private string getConString() {
+		private string GetConString() {
 			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName+"; UID=" + userID + "; PASSWORD=" + dbPass;
 		}
 		////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ namespace ProjectTemplate
 			{
 				string sqlDeletion = "DELETE FROM User WHERE ID=@id";
 
-				MySqlConnection sqlConnection = new MySqlConnection(getConString());
+				MySqlConnection sqlConnection = new MySqlConnection(GetConString());
 				MySqlCommand sqlCommand = new MySqlCommand(sqlDeletion, sqlConnection);
 
 				sqlCommand.Parameters.AddWithValue("@id", HttpUtility.UrlDecode(id));
@@ -70,6 +70,30 @@ namespace ProjectTemplate
 		}
 
 		[WebMethod(EnableSession = true)]
+		public bool DeleteInactiveAccounts()
+		{
+			string sqlDeletion = "DELETE FROM User WHERE DATEDIFF(CURDATE(), DayLastUsed) >= 365";
+
+			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
+			MySqlCommand sqlCommand = new MySqlCommand(sqlDeletion, sqlConnection);
+
+			sqlConnection.Open();
+			try
+			{
+				sqlCommand.ExecuteNonQuery();
+				return true;
+			}
+			catch (Exception e)
+			{
+				return false;
+			}
+			finally
+			{
+				sqlConnection.Close();
+			}
+		}
+
+		[WebMethod(EnableSession = true)]
 		public Account[][] GetAccounts()
 		{
 			// Check whether if the user is logged in or not. If not, return nothing.
@@ -81,7 +105,7 @@ namespace ProjectTemplate
 
 				int sessionID = Convert.ToInt32(Session["ID"]);
 
-				MySqlConnection sqlConnection = new MySqlConnection(getConString());
+				MySqlConnection sqlConnection = new MySqlConnection(GetConString());
 				MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
 				sqlCommand.Parameters.AddWithValue("@sessionID", HttpUtility.UrlDecode(Convert.ToString(sessionID)));
 
@@ -155,7 +179,7 @@ namespace ProjectTemplate
 				string sqlQuery = "SELECT ID, FirstName, LastName, Email, Username, Password " +
 					"FROM User " + "WHERE ID = @sessionID";
 				int sessionID = Convert.ToInt32(Session["ID"]);
-				MySqlConnection sqlConnection = new MySqlConnection(getConString());
+				MySqlConnection sqlConnection = new MySqlConnection(GetConString());
 				MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
 				sqlCommand.Parameters.AddWithValue("@sessionID", HttpUtility.UrlDecode(Convert.ToString(sessionID)));
 
@@ -191,7 +215,7 @@ namespace ProjectTemplate
 			bool doCredentialsMatch = false;
 			string sqlQuery = "SELECT ID, IsAdmin FROM User WHERE Username=@username AND Password=@password";
 
-			MySqlConnection sqlConnection = new MySqlConnection(getConString());
+			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
 			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
 			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
 			sqlCommand.Parameters.AddWithValue("@password", HttpUtility.UrlDecode(password));
@@ -205,6 +229,12 @@ namespace ProjectTemplate
 				Session["ID"] = queryResults.Rows[0]["ID"];
 				Session["IsAdmin"] = queryResults.Rows[0]["IsAdmin"];
 				doCredentialsMatch = true;
+				UpdateLogOn();
+
+				//if (Convert.ToInt32(Session["IsAdmin"]) == 1)
+				//{
+				//	DeleteInactiveAccounts();
+				//}
 			}
 
 			return doCredentialsMatch;
@@ -232,7 +262,7 @@ namespace ProjectTemplate
 				////////////////////////////////////////////////////////////////////////
 				///here's an example of using the getConString method!
 				////////////////////////////////////////////////////////////////////////
-				MySqlConnection con = new MySqlConnection(getConString());
+				MySqlConnection con = new MySqlConnection(GetConString());
 				////////////////////////////////////////////////////////////////////////
 
 				MySqlCommand cmd = new MySqlCommand(testQuery, con);
@@ -247,6 +277,36 @@ namespace ProjectTemplate
 			}
 		}
 
+		[WebMethod(EnableSession = true)]
+		public bool UpdateLogOn()
+		{
+			if (Session["ID"] != null)
+			{
+				string sqlSelect = "update User set DayLastUsed=CURDATE() where ID=@userId";
+				MySqlConnection sqlConnection = new MySqlConnection(GetConString());
+				MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+				sqlCommand.Parameters.AddWithValue("@userId", HttpUtility.UrlDecode(Convert.ToInt32(Session["ID"]).ToString()));
+
+				sqlConnection.Open();
+
+				try
+				{
+					sqlCommand.ExecuteNonQuery();
+					return true;
+				}
+				catch (Exception ex)
+				{
+					return false;
+				}
+				finally
+				{
+					sqlConnection.Close();
+				}
+			}
+			else return false;
+		}
+
 
 		[WebMethod(EnableSession = true)]
 		public string UpdateAccount(string userId, string firstName, string lastName, string emailAddress, 
@@ -254,7 +314,7 @@ namespace ProjectTemplate
 		{
 			if (Session["ID"] != null)
 			{
-				string sqlConnectString = getConString();
+				string sqlConnectString = GetConString();
 
 				// If the current password is wrong, prevent the update from carrying on any further.
 				if (!ValidateCurrentPword(userId, currentPword))
@@ -273,7 +333,7 @@ namespace ProjectTemplate
 				}
 
 				string sqlSelect = "update User set FirstName=@firstName, LastName=@lastName, " +
-					"Email=@emailAddress, Username=@username, Password=@newPword, DayLastUsed=CURDATE() where ID=@userId";
+					"Email=@emailAddress, Username=@username, Password=@newPword where ID=@userId";
 
 				MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
 				MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
@@ -313,7 +373,7 @@ namespace ProjectTemplate
 
 			// Establish a proper SQL query to be executed against the MySQL DB table.
 			string sqlQuery = "SELECT ID, Password FROM User WHERE ID =@Id AND Password = @currentPword";
-			MySqlConnection sqlConnection = new MySqlConnection(getConString());
+			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
 			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
 
 			// Ensures security of SQL query by preventing SQL injection.
@@ -340,7 +400,7 @@ namespace ProjectTemplate
 
 			// Establish a proper SQL query to be executed against the MySQL DB table.
 			string sqlQuery = "SELECT Email FROM User WHERE Email = @email AND ID != @id";
-			MySqlConnection sqlConnection = new MySqlConnection(getConString());
+			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
 			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
 
 			// Ensures security of SQL query by preventing SQL injection.
@@ -367,7 +427,7 @@ namespace ProjectTemplate
 
 			// Establish a proper SQL query to be executed against the MySQL DB table.
 			string sqlQuery = "SELECT Username FROM User WHERE Username=@username AND ID != @id";
-			MySqlConnection sqlConnection = new MySqlConnection(getConString());
+			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
 			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
 
 			// Ensures security of SQL query by preventing SQL injection.
