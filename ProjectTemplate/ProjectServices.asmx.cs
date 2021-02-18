@@ -29,12 +29,12 @@ namespace ProjectTemplate
 		private string userID = "group4spring2021";
 		private string dbPass = "spring2021group4";
 		private string dbName = "group4spring2021";
-		
+
 		////////////////////////////////////////////////////////////////////////
 		///call this method anywhere that you need the connection string!
 		////////////////////////////////////////////////////////////////////////
 		private string getConString() {
-			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName+"; UID=" + userID + "; PASSWORD=" + dbPass;
+			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName + "; UID=" + userID + "; PASSWORD=" + dbPass;
 		}
 		////////////////////////////////////////////////////////////////////////
 
@@ -73,7 +73,7 @@ namespace ProjectTemplate
 		public Account[][] GetAccounts()
 		{
 			// Check whether if the user is logged in or not. If not, return nothing.
-			if(Session["ID"] != null)
+			if (Session["ID"] != null)
 			{
 				// Exclude the admin who is performing the view operation.
 				string sqlQuery = "SELECT ID, FirstName, LastName, Email, Username, Password, IsAdmin, " +
@@ -99,7 +99,7 @@ namespace ProjectTemplate
 					if (Convert.ToInt32(Session["IsAdmin"]) == 1)
 					{
 						bool isUserAdmin = false;
-						
+
 						// Converts tiny int storage in database to boolean flag value
 						if (Convert.ToInt32(queryResults.Rows[i]["IsAdmin"]) != 0)
 						{
@@ -184,6 +184,20 @@ namespace ProjectTemplate
 			return null;
 
 		}
+
+        [WebMethod(EnableSession = true)]
+		public bool CheckAdmin()
+        {
+			bool admin = false;
+			
+			int check = Convert.ToInt32(Session["IsAdmin"]);
+
+            if (check == 1)
+            {
+				admin = true;
+            }
+				return admin;
+        }		
 
 		[WebMethod(EnableSession = true)]
 		public bool LogOn(string username, string password)
