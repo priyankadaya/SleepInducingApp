@@ -1,23 +1,65 @@
 function createAccount() {
 	var webMethod = "ProjectServices.asmx/CreateAccount";
-	var companyName = document.getElementById("company-name").value;
-	var fName = document.getElementById("first-name").value;
-	var lName = document.getElementById("last-name").value;
-	var email = document.getElementById("email-address").value;
+	//var fName = document.getElementById("first-name").value;
+	//var lName = document.getElementById("last-name").value;
+	//var email = document.getElementById("email-address").value;
 
-	var parameters = "{\"companyName\": \"" + encodeURI(fName) + "\","
-	+ "\"firstName\": \"" + encodeURI(lName) + "\","	
-	+ "\"lastName\": \"" + encodeURI(lName) + "\","
-	+ "\"emailAddress\": \"" + encodeURI(email) + "\","
-	+ "\"password\": \"" + encodeURI(password) + "\","
+	var parameters = "{\"userId\": \"" + encodeURI($("#user-id").val()) + "\","
+		+ "\"firstName\": \"" + encodeURI($("#first-name").val()) + "\","
+		+ "\"lastName\": \"" + encodeURI($("#last-name").val()) + "\","
+		+ "\"emailAddress\": \"" + encodeURI($("#email-address").val()) + "\","
+		+ "\"username\": \"" + encodeURI($("#username").val()) + "\","
+		+ "\"password\": \"" + encodeURI($("#password").val()) + "\"}";
 
-	console.log(`CompanyName: ${companyName}\n
-			First Name: ${fName}\n
+	console.log(`First Name: ${fName}\n
 			Last Name: ${lName}\n
 			Email: ${email}\n
 			Password: ${password}`);
 
-	///window.location.assign("log-in.html")
+	$.ajax({
+		type: "POST",
+		url: webMethod,
+		data: parameters,
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		success: function (msg) {
+			var responseFromServer = msg.d;
+
+			if (responseFromServer == "This email is already associated with an account.") {
+				$("#email-warning").html(responseFromServer);
+				$("#password-warning,#username-warning,#fatal-error").html('');
+			}
+			else if (responseFromServer == "This username is already associated with an account.") {
+				$("#username-warning").html(responseFromServer);
+				$("#fatal-error,#password-warning,#email-warning").html('');
+
+			}
+			else if (responseFromServer == "Error.") {
+				$("fatal-error").html(responseFromServer);
+				$("#password-warning,#email-warning,#username-warning").html('');
+			}
+			else {
+				function createAccount() {
+					var webMethod = "ProjectServices.asmx/UpdateAccount";
+					var parameters = "{\"userId\": \"" + encodeURI($("#user-id").val()) + "\","
+						+ "\"firstName\": \"" + encodeURI($("#first-name").val()) + "\","
+						+ "\"lastName\": \"" + encodeURI($("#last-name").val()) + "\","
+						+ "\"emailAddress\": \"" + encodeURI($("#email-address").val()) + "\","
+						+ "\"username\": \"" + encodeURI($("#username").val()) + "\","
+						+ "\"Pword\": \"" + encodeURI($("#password").val()) + "\"}";
+					goToLogin();
+				}
+
+			}
+		},
+		error: function (e) {
+			alert("this code will only execute if javascript is unable to access the webservice");
+		}
+	});
+}
+
+function goToLogin() {
+	window.location.pathname = '/log-in.html/'
 }
 
 var check = function() {
@@ -34,30 +76,5 @@ var check = function() {
 		document.getElementById('submit-btn').disabled = true;
 	}
 }
-
-
-
-				
-	// var editAjaxCall = //jQuery ajax method
-	// $.ajax({
-	// 	type: "POST",
-	// 	url: webMethod, // which web service we want to talk to
-	// 	data: parameters,  // which information will be sent to the web service
-	// 	contentType: "application/json; charset=utf-8",
-	// 	dataType: "json",
-	// 	success: function (msg) {  // msg represents whatever the server sends back to you in its raw form
-	// 		var responseFromServer = msg.d;  // grab based off a property of msg - the data from the message.
-
-	// 		for (var i = 0; i < responseFromServer.length; i++) {
-	// 			// Visual Studio encodes our class data into JSON
-	// 			alert(responseFromServer[i].fName);  // whatever value was returned will live in this variable, so we alert it.
-	// 			alert(responseFromServer[i].lName);
-	// 		}
-
-	// 	},
-	// 	error: function (e) {
-	// 		alert("this code will only execute if javascript is unable to access the webservice");
-	// 	}
-	// });
 
 

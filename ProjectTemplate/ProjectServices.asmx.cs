@@ -460,5 +460,53 @@ namespace ProjectTemplate
 
 			return usernameExists;
 		}
+
+		[WebMethod(EnableSession = true)]
+		public string CreateAccount(string userId, string firstName, string lastName, string emailAddress,
+			string username, string Pword)
+		{
+
+			string sqlConnectString = GetConString();
+
+			if (ValidateEmail(userId, emailAddress))
+			{
+				return "This email is already associated with an account.";
+			}
+
+			if (ValidateUsername(userId, username))
+			{
+				return "This username is already associated with an account.";
+			}
+
+			string sqlSelect = "INSERT INTO User (FirstName, LastName, Email, Username, Password, ID) " +
+				"values(@firstName, @lastName, @emailAddress, @username, @Pword, @userId)"; 
+
+
+			MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+			MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+			sqlCommand.Parameters.AddWithValue("@firstName", HttpUtility.UrlDecode(firstName));
+			sqlCommand.Parameters.AddWithValue("@lastName", HttpUtility.UrlDecode(lastName));
+			sqlCommand.Parameters.AddWithValue("@emailAddress", HttpUtility.UrlDecode(emailAddress));
+			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
+			sqlCommand.Parameters.AddWithValue("@Pword", HttpUtility.UrlDecode(Pword));
+			sqlCommand.Parameters.AddWithValue("@userId", HttpUtility.UrlDecode(userId));
+			sqlConnection.Open();
+			try
+			{
+				int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
+				return "Successfully completed.";
+			}
+			catch (Exception e)
+			{
+				return "Error.";
+			}
+			finally
+			{
+				sqlConnection.Close();
+			}
+
+		}
+
 	}
 }
