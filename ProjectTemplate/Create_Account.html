@@ -16,6 +16,13 @@ Changed "New Password" to a password confirmation and added event handling for t
 <head>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
+<header>
+	<div id="topnav" class="topnav">
+		<a id="home" class="active" href="log-in.html">Home</a>
+		<a id="edit" href="edit-page.html">Edit</a>
+		<a id="users" href="view-accounts.html">User Accounts</a>
+	</div>
+</header>
 
 <body>
 	<div class="container bootstrap snippets bootdeys">
@@ -84,7 +91,7 @@ Changed "New Password" to a password confirmation and added event handling for t
 
 					<div class="form-group">
 						<span class="col-xs-4 col-sm-4 col-sm-offset-2">
-							<button type="submit" class="btn btn-success" id="submit-btn" onclick = "createAccount()">Submit</button>
+							<button type="submit" class="btn btn-success" id="submit-btn" onclick="createAccount()">Submit</button>
 						</span>
 						<span class="col-xs-4 col-sm-4">
 							<button type="reset" class="btn btn-danger" id="cancel-btn">Cancel</button>
@@ -94,7 +101,45 @@ Changed "New Password" to a password confirmation and added event handling for t
 			</div>
 		</div>
 	</div>
+	<button type="button" class="logoutButton" onclick="location.href='log-in.html'">Log out</button>
 	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 	<script src="Create_Account.js"></script>
+	<script src="admin_navbar.js"></script>
+	<style>
+		.topnav {
+			overflow: hidden;
+			background-color: #333;
+		}
+
+			.topnav a {
+				float: left;
+				color: #f2f2f2;
+				text-align: center;
+				padding: 14px 16px;
+				text-decoration: none;
+				font-size: 17px;
+			}
+
+				.topnav a:hover {
+					background-color: #ddd;
+					color: black;
+				}
+
+				.topnav a.active {
+					background-color: #4CAF50;
+					color: white;
+				}
+
+		.logoutButton {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			width: 120px;
+			height: 40px;
+			font-size: 16px;
+			background-color: #333;
+			color: white;
+		}
+	</style>
 </body>
 </html>

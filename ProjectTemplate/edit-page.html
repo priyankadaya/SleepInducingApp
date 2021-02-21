@@ -1,7 +1,7 @@
 <!--
 2/7/2021 -- Varun Shourie
 Added basic barebones template from online, tweaking some Bootstrap and HTML to better fit our design.
-I removed some redundant fields from templates while changing the look and feel slightly. 
+I removed some redundant fields from templates while changing the look and feel slightly.
 -->
 
 <!DOCTYPE HTML>
@@ -12,7 +12,13 @@ I removed some redundant fields from templates while changing the look and feel 
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<title>Edit Account</title>
 </head>
-
+<header>
+	<div id="topnav" class="topnav">
+		<a id="home" class="active" href="log-in.html">Home</a>
+		<a id="edit" href="edit-page.html">Edit</a>
+		<a id="users" href="view-accounts.html">User Accounts</a>
+	</div>
+</header>
 <!-- REFORMATTED AND REALIGNED CODE SINCE IT WAS EXTREMELY UGLY -->
 <body>
 	<div class="container bootstrap snippets bootdeys">
@@ -26,10 +32,11 @@ I removed some redundant fields from templates while changing the look and feel 
 							<h4 class="panel-title">User Info</h4>
 						</div>
 
+
 						<input type="hidden" id="user-id" />
 
 						<div class="panel-body">
-							<!-- 
+							<!--
 							<div class="form-group">
 								<label class="col-xs-6 col-sm-4 control-label">Location</label>
 								<div class="col-xs-8 col-sm-10">
@@ -41,7 +48,7 @@ I removed some redundant fields from templates while changing the look and feel 
 										<option>United States</option>
 									</select>
 								</div>
-							</div> 
+							</div>
 							-->
 
 							<div class="form-group">
@@ -58,7 +65,7 @@ I removed some redundant fields from templates while changing the look and feel 
 								</div>
 							</div>
 
-							<div class="form-group" >
+							<div class="form-group">
 								<label class="col-xs-6 col-sm-4 control-label">E-mail Address</label>
 								<div class="col-xs-8 col-sm-10">
 									<input type="email" class="form-control" id="email-address" required>
@@ -131,7 +138,45 @@ I removed some redundant fields from templates while changing the look and feel 
 			</div>
 		</div>
 	</div>
-	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-	<script src="edit-page.js"></script>
+	<button type="button" class="logoutButton" onclick="location.href='log-in.html'">Log out</button>
 </body>
 </html>
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+<script src="edit-page.js"></script>
+<script src="admin_navbar.js"></script>
+<style>
+	.topnav {
+		overflow: hidden;
+		background-color: #333;
+	}
+
+		.topnav a {
+			float: left;
+			color: #f2f2f2;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+			font-size: 17px;
+		}
+
+			.topnav a:hover {
+				background-color: #ddd;
+				color: black;
+			}
+
+			.topnav a.active {
+				background-color: #4CAF50;
+				color: white;
+			}
+
+			.logoutButton {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				width: 120px;
+				height: 40px;
+				font-size: 16px;
+				background-color: #333;
+				color: white;
+			}
+</style>

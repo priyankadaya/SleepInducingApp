@@ -7,6 +7,13 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+<header>
+    <div id="topnav" class="topnav">
+        <a id="home" class="active" href="log-in.html">Home</a>
+        <a id="edit" href="edit-page.html">Edit</a>
+        <a id="users" href="view-accounts.html">User Accounts</a>
+    </div>
+</header>
 <body>
     <br />
     <p class="h3 text-center">View Accounts</p>
@@ -26,12 +33,49 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-12" id="inactive-account-container">
-             <p class="h5 text-center">Inactive Accounts</p>
-             <div class="container" id="inactive-accounts">
+            <p class="h5 text-center">Inactive Accounts</p>
+            <div class="container" id="inactive-accounts">
 
-             </div>
+            </div>
         </div>
     </div>
+    <button type="button" class="logoutButton" onclick="location.href='log-in.html'">Log out</button>
     <script src="view-accounts.js"></script>
+    <script src="admin_navbar.js"></script>
+    <style>
+        .topnav {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+            .topnav a {
+                float: left;
+                color: #f2f2f2;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+
+                .topnav a:hover {
+                    background-color: #ddd;
+                    color: black;
+                }
+
+                .topnav a.active {
+                    background-color: #4CAF50;
+                    color: white;
+                }
+                .logoutButton {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    width: 120px;
+                    height: 40px;
+                    font-size: 16px;
+                    background-color: #333;
+                    color: white;
+                }
+    </style>
 </body>
 </html>
