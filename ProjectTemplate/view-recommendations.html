@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>View Recommendations</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="admin_navbar.js"></script>
+    <script type="text/javascript">
+
+        function loadData() {
+            var webMethod = "ProjectServices.asmx/FetchData";
+            var parameters = "{}";
+
+
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    var responseFromServer = msg.d;
+                    alert(responseFromServer);
+                },
+                error: function (e) {
+                    alert("this code will only execute if javascript is unable to access the webservice");
+                }
+            });
+            document.getElementById("dataText").innerHTML = webMethod;
+        }
+    </script>
+</head>
+
+<header>
+    
+    <div id="topnav" class="topnav">
+        <a id="home" class="active" href="sounds.html">Home</a>
+        <a id="edit" href="edit-page.html">Edit</a>
+        <a id="recommend" href="Sound_Recommendation.html">Request a Sound</a>
+    </div>
+</header>
+
+<body onload="loadData()">
+    <div class="container bootstrap snippets bootdeys">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <form class="form-horizontal">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h1 class="panel-title">Sit tight. More sounds are on their way!</h1>
+                            <h6>We are currently considering some of our most requested sounds listed below.
+                            You may also request a sound of your choice and we'll go under production
+                            as soon as we can! Thank you.</h6>
+                        </div>
+
+                        <div class="panel-body">
+                                <h6><span id="dataText"></span></h6>
+                           
+                        </div>
+                    </div>
+
+                    <style>
+                        .panel-title {
+                            text-align: center;
+                        }
+                        .panel-body{
+                            
+                        }
+                        .topnav {
+                            overflow: hidden;
+                            background-color: #333;
+                        }
+
+                            .topnav a {
+                                float: left;
+                                color: #f2f2f2;
+                                text-align: center;
+                                padding: 14px 16px;
+                                text-decoration: none;
+                                font-size: 17px;
+                            }
+                                .topnav a:hover {
+                                    background-color: #ddd;
+                                    color: black;
+                                }
+
+                                .topnav a.active {
+                                    background-color: #4CAF50;
+                                    color: white;
+                                }
+                    </style>
+</body>
+</html >

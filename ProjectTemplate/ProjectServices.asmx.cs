@@ -615,5 +615,22 @@ namespace ProjectTemplate
 			return "Not logged in.";
 		}
 
-	}
+        [WebMethod(EnableSession = true)]
+        public string FetchData()
+        {
+            string sqlConnectString = GetConString();
+
+            string sqlQuery = "SELECT Description FROM Recommendations";
+
+            MySqlConnection sqlConnection = new MySqlConnection(GetConString());
+            MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+
+            MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+            DataTable queryResults = new DataTable();
+            sqlDataAdapter.Fill(queryResults);
+
+            return queryResults.Rows.ToString();
+        }
+
+    }
 }

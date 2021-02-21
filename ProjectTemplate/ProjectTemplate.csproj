@@ -97,6 +97,7 @@
     <Content Include="email_inactive_accounts.html" />
     <Content Include="Global.asax" />
     <Content Include="edit-page.html" />
+    <Content Include="view-recommendations.html" />
     <Content Include="test.html" />
     <Content Include="log-in.css" />
     <Content Include="log-in.html" />
