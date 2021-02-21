@@ -1,25 +1,15 @@
-function createAccount() {
-	var webMethod = "ProjectServices.asmx/CreateAccount";
-	//var fName = document.getElementById("first-name").value;
-	//var lName = document.getElementById("last-name").value;
-	//var email = document.getElementById("email-address").value;
+function createNewAccount() {
 
-	var parameters = "{\"userId\": \"" + encodeURI($("#user-id").val()) + "\","
-		+ "\"firstName\": \"" + encodeURI($("#first-name").val()) + "\","
+	var parameters = "{\"firstName\": \"" + encodeURI($("#first-name").val()) + "\","
 		+ "\"lastName\": \"" + encodeURI($("#last-name").val()) + "\","
 		+ "\"emailAddress\": \"" + encodeURI($("#email-address").val()) + "\","
 		+ "\"username\": \"" + encodeURI($("#username").val()) + "\","
-		+ "\"password\": \"" + encodeURI($("#password").val()) + "\"}";
-
-	console.log(`First Name: ${fName}\n
-			Last Name: ${lName}\n
-			Email: ${email}\n
-			Password: ${password}`);
+		+ "\"Pword\": \"" + encodeURI($("#password").val()) + "\"}";
 
 	$.ajax({
-		type: "POST",
-		url: webMethod,
-		data: parameters,
+		type: "POST", 
+		url: "ProjectServices.asmx/CreateAccount",
+		data: parameters, 
 		contentType: "application/json; charset=utf-8",
 		dataType: "json",
 		success: function (msg) {
@@ -28,6 +18,7 @@ function createAccount() {
 			if (responseFromServer == "This email is already associated with an account.") {
 				$("#email-warning").html(responseFromServer);
 				$("#password-warning,#username-warning,#fatal-error").html('');
+
 			}
 			else if (responseFromServer == "This username is already associated with an account.") {
 				$("#username-warning").html(responseFromServer);
@@ -37,33 +28,25 @@ function createAccount() {
 			else if (responseFromServer == "Error.") {
 				$("fatal-error").html(responseFromServer);
 				$("#password-warning,#email-warning,#username-warning").html('');
+
 			}
 			else {
-				function createAccount() {
-					var webMethod = "ProjectServices.asmx/UpdateAccount";
-					var parameters = "{\"userId\": \"" + encodeURI($("#user-id").val()) + "\","
-						+ "\"firstName\": \"" + encodeURI($("#first-name").val()) + "\","
-						+ "\"lastName\": \"" + encodeURI($("#last-name").val()) + "\","
-						+ "\"emailAddress\": \"" + encodeURI($("#email-address").val()) + "\","
-						+ "\"username\": \"" + encodeURI($("#username").val()) + "\","
-						+ "\"Pword\": \"" + encodeURI($("#password").val()) + "\"}";
+					alert("Account creation successful! Redirecting you to login page...")
 					goToLogin();
-				}
-
 			}
 		},
 		error: function (e) {
 			alert("this code will only execute if javascript is unable to access the webservice");
+			console.log(e)
 		}
 	});
 }
 
 function goToLogin() {
-	window.location.pathname = '/log-in.html/'
+	window.location.pathname = '/log-in.html'
 }
 
 var check = function() {
-	var password = document.getElementById("password").value;
 	confirm_password = document.getElementById("confirmpassword").value;
 	if (document.getElementById('password').value ==
 		 document.getElementById('confirmpassword').value) {
