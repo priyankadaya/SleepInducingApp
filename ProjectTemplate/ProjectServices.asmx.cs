@@ -616,7 +616,7 @@ namespace ProjectTemplate
 		}
 
         [WebMethod(EnableSession = true)]
-        public string FetchData()
+        public Array[] Recommendation()
         {
             string sqlConnectString = GetConString();
 
@@ -626,10 +626,20 @@ namespace ProjectTemplate
             MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
 
             MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
-            DataTable queryResults = new DataTable();
+            DataTable queryResults = new DataTable("Recommendations");
             sqlDataAdapter.Fill(queryResults);
 
-            return queryResults.Rows.ToString();
+            Object[] recArray = new Object[1];
+             
+            for (int i = 0; i < queryResults.Rows.Count; i++)
+            {
+                Object rec = new Object();
+                Object.Description = queryResults.Rows[i]["Description"].ToString();
+
+                recArray.Add(rec);
+            }
+           
+            return recArray[];
         }
 
     }
