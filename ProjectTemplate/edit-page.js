@@ -23,6 +23,7 @@ function deleteAccount(id) {
 				}
 				else {
 					$("#delete-btn,#cancel-btn,#submit-btn").prop("disabled", true);
+					window.location.href = 'log-in.html'
 				}
 			},
 			error: function (e) {
@@ -67,9 +68,6 @@ function editAccount() {
 			else if (responseFromServer == "Error.") {
 				$("fatal-error").html(responseFromServer);
 				$("#password-warning,#email-warning,#username-warning").html('');
-			}
-			else {
-				loadDocument();
 			}
 
 		},
