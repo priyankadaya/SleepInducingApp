@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Mega&display=swap');
+
+#container {
+    display: grid;
+    grid-template-columns: 100vw;
+}
+
+#container button {
+    height: 200px;
+    border: 0;
+    border-radius: 0;
+}
+
+i {
+    font-size: 3em;
+}
+
+i:hover {
+    color: #787878;
+}
+
+#controls {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 75px;
+    text-align: center;
+    background: white;
+}
+
+[data-sound] {
+    position: relative; 
+    font-family: 'Lexend Mega', sans-serif;
+    font-size: 40px;
+    color: rgb(0, 0, 0, 1);
+}
+
+[data-sound = 'waves']::before {
+    content: '';
+    position: absolute;
+    background: url(imgs/wave.jpg);
+    background-size: 100%;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: .3;
+}
+
+[data-sound = 'rain']::before {
+    content: '';
+    position: absolute;
+    background: url(imgs/rain.jpg);
+    background-size: 100%;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: .3;
+}
+
+[data-sound = 'garden']::before {
+    content: '';
+    position: absolute;
+    background: url(imgs/flowers.jpg);
+    background-size: 100%;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: .3;
+}
+
+[data-sound = 'crickets']::before {
+    content: '';
+    position: absolute;
+    background: url(imgs/cricket.jpg);
+    background-size: 100%;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: .3;
+}
+
+[data-sound = 'stream']::before {
+    content: '';
+    position: absolute;
+    background: url(imgs/stream.jpg);
+    background-size: 100%;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: .3;
+}
+
+[data-sound = 'frogs']::before {
+    content: '';
+    position: absolute;
+    background: url(imgs/frog.jpg);
+    background-size: 100%;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: .3;
+}

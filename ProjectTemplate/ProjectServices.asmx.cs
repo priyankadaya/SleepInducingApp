@@ -462,76 +462,24 @@ namespace ProjectTemplate
 		}
 
 		[WebMethod(EnableSession = true)]
-		private bool ValidateNewEmail(string email)
-		{
-			bool emailExists = false;
-
-			// Establish a proper SQL query to be executed against the MySQL DB table.
-			string sqlQuery = "SELECT Email FROM User WHERE Email = @email";
-			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
-			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
-
-			// Ensures security of SQL query by preventing SQL injection.
-			sqlCommand.Parameters.AddWithValue("@email", HttpUtility.UrlDecode(email));
-
-			// Fill data set with query result checking if the email is taken.
-			MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
-			DataTable queryResults = new DataTable();
-			sqlDataAdapter.Fill(queryResults);
-
-			if (queryResults.Rows.Count > 0)
-			{
-				emailExists = true;
-			}
-
-			return emailExists;
-		}
-
-		[WebMethod(EnableSession = true)]
-		private bool ValidateNewUsername(string username)
-		{
-			bool usernameExists = false;
-
-			// Establish a proper SQL query to be executed against the MySQL DB table.
-			string sqlQuery = "SELECT Username FROM User WHERE Username=@username";
-			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
-			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
-
-			// Ensures security of SQL query by preventing SQL injection.
-			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
-
-			// Fill data set with query result checking if the username is taken.
-			MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
-			DataTable queryResults = new DataTable();
-			sqlDataAdapter.Fill(queryResults);
-
-			if (queryResults.Rows.Count > 0)
-			{
-				usernameExists = true;
-			}
-
-			return usernameExists;
-		}
-
-		[WebMethod(EnableSession = true)]
-		public string CreateAccount(string firstName, string lastName, string emailAddress,
+		public string CreateAccount(string userId, string firstName, string lastName, string emailAddress,
 			string username, string Pword)
 		{
 
 			string sqlConnectString = GetConString();
 
-			if (ValidateNewEmail(emailAddress))
+			if (ValidateEmail(userId, emailAddress))
 			{
 				return "This email is already associated with an account.";
 			}
 
-			if (ValidateNewUsername(username))
+			if (ValidateUsername(userId, username))
 			{
 				return "This username is already associated with an account.";
 			}
 
-			string sqlSelect = "INSERT INTO User (FirstName, LastName, Email, Username, Password, DayLastUsed) " +
-				"values (@firstName, @lastName, @emailAddress, @username, @Pword, @currentDate)"; 
+			string sqlSelect = "INSERT INTO User (FirstName, LastName, Email, Username, Password, ID) " +
+				"values(@firstName, @lastName, @emailAddress, @username, @Pword, @userId)"; 
 
 
 			MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
@@ -542,7 +490,7 @@ namespace ProjectTemplate
 			sqlCommand.Parameters.AddWithValue("@emailAddress", HttpUtility.UrlDecode(emailAddress));
 			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
 			sqlCommand.Parameters.AddWithValue("@Pword", HttpUtility.UrlDecode(Pword));
-			sqlCommand.Parameters.AddWithValue("@currentDate", DateTime.Now);
+			sqlCommand.Parameters.AddWithValue("@userId", HttpUtility.UrlDecode(userId));
 			sqlConnection.Open();
 			try
 			{
@@ -558,61 +506,6 @@ namespace ProjectTemplate
 				sqlConnection.Close();
 			}
 
-		}
-
-		[WebMethod(EnableSession = true)]
-		public string MakeRecommendations(string username, string emailAddress, string soundDesc)
-		{
-			if (Session["ID"] != null)
-			{
-				string sqlConnectString = GetConString();
-
-				string sqlQuery = "SELECT ID, FirstName, LastName, Email, Username, Password " +
-					"FROM User " + "WHERE ID = @sessionID";
-				int sessionID = Convert.ToInt32(Session["ID"]);
-				MySqlConnection sqlConnection = new MySqlConnection(GetConString());
-				MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
-				sqlCommand.Parameters.AddWithValue("@sessionID", HttpUtility.UrlDecode(Convert.ToString(sessionID)));
-
-				MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
-				DataTable queryResults = new DataTable("Accounts");
-				sqlDataAdapter.Fill(queryResults);
-
-
-				if (queryResults.Rows.Count == 1)
-				{
-					var Email = queryResults.Rows[0]["Email"].ToString();
-					var Username = queryResults.Rows[0]["Username"].ToString();
-
-					string sqlSelect = "INSERT INTO Recommendations (username, Email, Description, DateSubmitted) " +
-					"values (@username, @emailAddress, @Description, @currentDate)";
-
-					MySqlConnection sqlConnection2 = new MySqlConnection(sqlConnectString);
-					MySqlCommand sqlCommand2 = new MySqlCommand(sqlSelect, sqlConnection2);
-
-					sqlCommand2.Parameters.AddWithValue("@emailAddress", Email);
-					sqlCommand2.Parameters.AddWithValue("@username", Username);
-					sqlCommand2.Parameters.AddWithValue("@Description", HttpUtility.UrlDecode(soundDesc));
-					sqlCommand2.Parameters.AddWithValue("@currentDate", DateTime.Now);
-					sqlConnection2.Open();
-					try
-					{
-						int accountID = Convert.ToInt32(sqlCommand2.ExecuteScalar());
-						return "Successfully completed.";
-					}
-					catch (Exception e)
-					{
-						return "Error.";
-					}
-					finally
-					{
-						sqlConnection.Close();
-					}
-				}
-
-			}
-
-			return "Not logged in.";
 		}
 
 	}
