@@ -11,16 +11,63 @@ I removed some redundant fields from templates while changing the look and feel 
 	<!-- Changed the version of Bootstrap CDN to most recent since the one in the template wasn't working. -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<title>Edit Account</title>
+
+	<style>
+		html,
+		body {
+			background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
+			background-size: cover;
+			background-repeat: no-repeat;
+			height: 100%;
+			color: white
+		}
+
+		.topnav {
+			overflow: hidden;
+			background-color: #333;
+		}
+
+			.topnav a {
+				float: left;
+				color: #f2f2f2;
+				text-align: center;
+				padding: 14px 16px;
+				text-decoration: none;
+				font-size: 17px;
+			}
+
+				.topnav a:hover {
+					background-color: #ddd;
+					color: black;
+				}
+
+				.topnav a.active {
+					background-color: #4CAF50;
+					color: white;
+				}
+
+		.logoutButton {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			width: 120px;
+			height: 40px;
+			font-size: 16px;
+			background-color: #333;
+			color: white;
+		}
+	</style>
 </head>
-<header>
-	<div id="topnav" class="topnav">
-		<a id="home" class="active" href="sounds.html">Home</a>
-		<a id="edit" href="edit-page.html">Edit</a>
-		<a id="users" href="view-accounts.html">User Accounts</a>
-	</div>
-</header>
 <!-- REFORMATTED AND REALIGNED CODE SINCE IT WAS EXTREMELY UGLY -->
 <body>
+	<header>
+		<div id="topnav" class="topnav">
+			<a id="home" class="active" href="sounds.html">Home</a>
+			<a id="edit" href="edit-page.html">Edit</a>
+			<a id="users" href="view-accounts.html">User Accounts</a>
+		</div>
+	</header>
+
 	<div class="container bootstrap snippets bootdeys">
 		<div class="row">
 			<div class="col-xs-12 col-sm-12">
@@ -139,44 +186,9 @@ I removed some redundant fields from templates while changing the look and feel 
 		</div>
 	</div>
 	<button type="button" class="logoutButton" onclick="location.href='log-in.html'">Log out</button>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<script src="edit-page.js"></script>
+	<script src="admin_navbar.js"></script>
 </body>
 </html>
-<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-<script src="edit-page.js"></script>
-<script src="admin_navbar.js"></script>
-<style>
-	.topnav {
-		overflow: hidden;
-		background-color: #333;
-	}
-
-		.topnav a {
-			float: left;
-			color: #f2f2f2;
-			text-align: center;
-			padding: 14px 16px;
-			text-decoration: none;
-			font-size: 17px;
-		}
-
-			.topnav a:hover {
-				background-color: #ddd;
-				color: black;
-			}
-
-			.topnav a.active {
-				background-color: #4CAF50;
-				color: white;
-			}
-
-			.logoutButton {
-				position: absolute;
-				top: 10px;
-				right: 10px;
-				width: 120px;
-				height: 40px;
-				font-size: 16px;
-				background-color: #333;
-				color: white;
-			}
-</style>
