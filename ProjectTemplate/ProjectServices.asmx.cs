@@ -33,8 +33,9 @@ namespace ProjectTemplate
 		////////////////////////////////////////////////////////////////////////
 		///call this method anywhere that you need the connection string!
 		////////////////////////////////////////////////////////////////////////
-		private string GetConString() {
-			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName+"; UID=" + userID + "; PASSWORD=" + dbPass;
+		private string GetConString()
+		{
+			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName + "; UID=" + userID + "; PASSWORD=" + dbPass;
 		}
 		////////////////////////////////////////////////////////////////////////
 
@@ -213,7 +214,7 @@ namespace ProjectTemplate
 		public bool CheckAdmin()
 		{
 			bool admin = false;
-			
+
 			int check = Convert.ToInt32(Session["IsAdmin"]);
 
 			if (check == 1)
@@ -221,7 +222,7 @@ namespace ProjectTemplate
 				admin = true;
 			}
 			return admin;
-		}		
+		}
 
 		[WebMethod(EnableSession = true)]
 		public bool LogOn(string username, string password)
@@ -287,7 +288,7 @@ namespace ProjectTemplate
 			}
 			catch (Exception e)
 			{
-				return "Something went wrong, please check your credentials and db name and try again.  Error: "+e.Message;
+				return "Something went wrong, please check your credentials and db name and try again.  Error: " + e.Message;
 			}
 		}
 
@@ -323,7 +324,7 @@ namespace ProjectTemplate
 
 
 		[WebMethod(EnableSession = true)]
-		public string UpdateAccount(string userId, string firstName, string lastName, string emailAddress, 
+		public string UpdateAccount(string userId, string firstName, string lastName, string emailAddress,
 			string username, string currentPword, string newPword)
 		{
 			if (Session["ID"] != null)
@@ -377,7 +378,7 @@ namespace ProjectTemplate
 			}
 
 			return "Not logged in.";
-			
+
 		}
 
 		[WebMethod(EnableSession = true)]
@@ -462,24 +463,76 @@ namespace ProjectTemplate
 		}
 
 		[WebMethod(EnableSession = true)]
-		public string CreateAccount(string userId, string firstName, string lastName, string emailAddress,
+		private bool ValidateNewEmail(string email)
+		{
+			bool emailExists = false;
+
+			// Establish a proper SQL query to be executed against the MySQL DB table.
+			string sqlQuery = "SELECT Email FROM User WHERE Email = @email";
+			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
+			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+
+			// Ensures security of SQL query by preventing SQL injection.
+			sqlCommand.Parameters.AddWithValue("@email", HttpUtility.UrlDecode(email));
+
+			// Fill data set with query result checking if the email is taken.
+			MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+			DataTable queryResults = new DataTable();
+			sqlDataAdapter.Fill(queryResults);
+
+			if (queryResults.Rows.Count > 0)
+			{
+				emailExists = true;
+			}
+
+			return emailExists;
+		}
+
+		[WebMethod(EnableSession = true)]
+		private bool ValidateNewUsername(string username)
+		{
+			bool usernameExists = false;
+
+			// Establish a proper SQL query to be executed against the MySQL DB table.
+			string sqlQuery = "SELECT Username FROM User WHERE Username=@username";
+			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
+			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+
+			// Ensures security of SQL query by preventing SQL injection.
+			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
+
+			// Fill data set with query result checking if the username is taken.
+			MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+			DataTable queryResults = new DataTable();
+			sqlDataAdapter.Fill(queryResults);
+
+			if (queryResults.Rows.Count > 0)
+			{
+				usernameExists = true;
+			}
+
+			return usernameExists;
+		}
+
+		[WebMethod(EnableSession = true)]
+		public string CreateAccount(string firstName, string lastName, string emailAddress,
 			string username, string Pword)
 		{
 
 			string sqlConnectString = GetConString();
 
-			if (ValidateEmail(userId, emailAddress))
+			if (ValidateNewEmail(emailAddress))
 			{
 				return "This email is already associated with an account.";
 			}
 
-			if (ValidateUsername(userId, username))
+			if (ValidateNewUsername(username))
 			{
 				return "This username is already associated with an account.";
 			}
 
-			string sqlSelect = "INSERT INTO User (FirstName, LastName, Email, Username, Password, ID) " +
-				"values(@firstName, @lastName, @emailAddress, @username, @Pword, @userId)"; 
+			string sqlSelect = "INSERT INTO User (FirstName, LastName, Email, Username, Password, DayLastUsed) " +
+				"values (@firstName, @lastName, @emailAddress, @username, @Pword, @currentDate)";
 
 
 			MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
@@ -490,7 +543,7 @@ namespace ProjectTemplate
 			sqlCommand.Parameters.AddWithValue("@emailAddress", HttpUtility.UrlDecode(emailAddress));
 			sqlCommand.Parameters.AddWithValue("@username", HttpUtility.UrlDecode(username));
 			sqlCommand.Parameters.AddWithValue("@Pword", HttpUtility.UrlDecode(Pword));
-			sqlCommand.Parameters.AddWithValue("@userId", HttpUtility.UrlDecode(userId));
+			sqlCommand.Parameters.AddWithValue("@currentDate", DateTime.Now);
 			sqlConnection.Open();
 			try
 			{
@@ -508,5 +561,99 @@ namespace ProjectTemplate
 
 		}
 
+		[WebMethod(EnableSession = true)]
+		public string MakeRecommendations(string username, string emailAddress, string soundDesc)
+		{
+			if (Session["ID"] != null)
+			{
+				string sqlConnectString = GetConString();
+
+				string sqlQuery = "SELECT ID, FirstName, LastName, Email, Username, Password " +
+					"FROM User " + "WHERE ID = @sessionID";
+				int sessionID = Convert.ToInt32(Session["ID"]);
+				MySqlConnection sqlConnection = new MySqlConnection(GetConString());
+				MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+				sqlCommand.Parameters.AddWithValue("@sessionID", HttpUtility.UrlDecode(Convert.ToString(sessionID)));
+
+				MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+				DataTable queryResults = new DataTable("Accounts");
+				sqlDataAdapter.Fill(queryResults);
+
+
+				if (queryResults.Rows.Count == 1)
+				{
+					var Email = queryResults.Rows[0]["Email"].ToString();
+					var Username = queryResults.Rows[0]["Username"].ToString();
+
+					string sqlSelect = "INSERT INTO Recommendations (username, Email, Description, DateSubmitted) " +
+					"values (@username, @emailAddress, @Description, @currentDate)";
+
+					MySqlConnection sqlConnection2 = new MySqlConnection(sqlConnectString);
+					MySqlCommand sqlCommand2 = new MySqlCommand(sqlSelect, sqlConnection2);
+
+					sqlCommand2.Parameters.AddWithValue("@emailAddress", Email);
+					sqlCommand2.Parameters.AddWithValue("@username", Username);
+					sqlCommand2.Parameters.AddWithValue("@Description", HttpUtility.UrlDecode(soundDesc));
+					sqlCommand2.Parameters.AddWithValue("@currentDate", DateTime.Now);
+					sqlConnection2.Open();
+					try
+					{
+						int accountID = Convert.ToInt32(sqlCommand2.ExecuteScalar());
+						return "Successfully completed.";
+					}
+					catch (Exception e)
+					{
+						return "Error.";
+					}
+					finally
+					{
+						sqlConnection.Close();
+					}
+				}
+
+			}
+
+			return "Not logged in.";
+		}
+
+		[WebMethod(EnableSession = true)]
+		public Rec[] ListRecommendations()
+		{
+			string sqlQuery = "SELECT username, Email, Description , DateSubmitted FROM Recommendations";
+
+			MySqlConnection sqlConnection = new MySqlConnection(GetConString());
+			MySqlCommand sqlCommand = new MySqlCommand(sqlQuery, sqlConnection);
+
+			MySqlDataAdapter sqlDataAdapter = new MySqlDataAdapter(sqlCommand);
+			DataTable queryResults = new DataTable("Recs");
+			sqlDataAdapter.Fill(queryResults);
+
+			List<Rec> allRecs = new List<Rec>();
+
+			for (int i = 0; i < queryResults.Rows.Count; i++)
+			{
+
+				Rec tmpRec = new Rec
+				{
+
+					Email = queryResults.Rows[i]["Email"].ToString(),
+					Username = queryResults.Rows[i]["Username"].ToString(),
+					Description = queryResults.Rows[i]["Description"].ToString(),
+					DateSubmitted = queryResults.Rows[i]["DateSubmitted"].ToString().Split( )[0]
+				};
+
+				allRecs.Add(tmpRec);
+			}
+				try
+				{
+					return allRecs.ToArray();
+				}
+				catch (Exception e)
+				{
+					return null;
+				}
+
+			}
+
+		}
 	}
-}
