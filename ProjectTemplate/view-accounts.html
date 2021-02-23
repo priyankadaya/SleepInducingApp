@@ -7,6 +7,9 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend+Mega&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap');
+        
         html,
         body {
             background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
@@ -19,10 +22,11 @@
         .container {
             background-color: black;
         }
-        
+
         .topnav {
             overflow: hidden;
             background-color: #333;
+            width: 100vw
         }
 
             .topnav a {
@@ -32,6 +36,7 @@
                 padding: 14px 16px;
                 text-decoration: none;
                 font-size: 17px;
+                font-family: 'Raleway', sans-serif;
             }
 
                 .topnav a:hover {
@@ -46,13 +51,21 @@
 
         .logoutButton {
             position: absolute;
+            margin-top: 2px;
             top: 10px;
             right: 10px;
             width: 120px;
             height: 40px;
             font-size: 16px;
-            background-color: #333;
+            font-family: 'Raleway', sans-serif;
+            background-color: rgb(117, 117, 117);
+            border: 1px solid black;
+            border-radius: 25px;
             color: white;
+        }
+
+        .logoutButton:hover {
+            background-color: rgb(70, 70, 70);
         }
     </style>
 </head>
