@@ -13,11 +13,12 @@ function CheckAdmin() {
         dataType: "json",
         success: function (msg) {
             var responseFromServer = msg.d;
-            var x = document.getElementById("users");
+            var viewUsersLink = document.getElementById("users");
+            var recommendationList = document.getElementById("recommendation-list");
 
             if (responseFromServer == false) {
-                x.style.display = "none";
-                
+                viewUsersLink.style.display = "none";
+                recommendationList.style.display = "none";
             }
         },
         error: function (e) {
