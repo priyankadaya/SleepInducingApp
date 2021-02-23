@@ -18,14 +18,11 @@ function getBrightness() {
     var timeOfDay = getTimeOfDay();
     if (timeOfDay > 5 || timeOfDay <= 9) {
         document.getElementById('body').style.filter = "brightness(1.10)";
-    }
-    else if (timeOfDay > 9 || timeOfDay < 12) {
+    } else if (timeOfDay > 9 || timeOfDay < 12) {
         document.getElementById('body').style.filter = "brightness(1.25)";
-    }
-    else if (timeOfDay => 12 || timeOfDay < 19) {
+    } else if (timeOfDay => 12 || timeOfDay < 19) {
         document.getElementById('body').style.filter = "brightness(1.50)";
-    }
-    else {
+    } else {
         document.getElementById('body').style.filter = "brightness(75%)";
     }
 }
@@ -35,9 +32,9 @@ function attemptLogin() {
     var username = document.getElementById('username-entry').value;
     var password = document.getElementById('password-entry').value;
     var data = {
-            username: document.getElementById('username-entry').value,
-            password: document.getElementById('password-entry').value
-        }
+        username: document.getElementById('username-entry').value,
+        password: document.getElementById('password-entry').value
+    }
     $.ajax({
         type: "POST",
         url: url,
@@ -47,11 +44,10 @@ function attemptLogin() {
         success: function(msg) {
             if (msg.d) {
                 navigateToMainSite();
-            }
-            else {
+            } else {
                 alert("Log-in failed.");
             }
-            
+
         },
         error: function(e) {
             alert('Something went seriously wrong.');
