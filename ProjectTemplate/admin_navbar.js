@@ -35,6 +35,7 @@ function logOff() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
+            location.href = 'log-in.html'
         },
         error: function (e) {
             alert('Something is wrong.');
