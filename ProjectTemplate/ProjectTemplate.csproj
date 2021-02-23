@@ -98,6 +98,8 @@
     <Content Include="Global.asax" />
     <Content Include="edit-page.html" />
     <Content Include="sounds.html" />
+    <Content Include="Sound_Recommendation.html" />
+    <Content Include="Sound_Recommendation.js" />
     <Content Include="test.html" />
     <Content Include="log-in.css" />
     <Content Include="log-in.html" />
@@ -119,6 +121,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
