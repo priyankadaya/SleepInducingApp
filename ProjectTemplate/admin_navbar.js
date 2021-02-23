@@ -25,3 +25,19 @@ function CheckAdmin() {
         }
     });
 }
+
+function logOff() {
+    var webMethod = "ProjectServices.asmx/LogOff"
+
+    $.ajax({
+        type: "POST",
+        url: webMethod,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+        },
+        error: function (e) {
+            alert('Something is wrong.');
+        }
+    });
+}
