@@ -27,6 +27,7 @@ function CheckAdmin() {
 }
 
 function logOff() {
+    debugger;
     var webMethod = "ProjectServices.asmx/LogOff"
 
     $.ajax({
