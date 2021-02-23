@@ -16,10 +16,17 @@ function getBrightness() {
         return d.getHours();
     }
     var timeOfDay = getTimeOfDay();
-    if (timeOfDay > 5 || timeOfDay < 19) {
-        document.getElementById('body').style.filter = "brightness(1.75)";
-    } else {
-        document.getElementById('body').style.filter = "brightness(50%)";
+    if (timeOfDay > 5 || timeOfDay <= 9) {
+        document.getElementById('body').style.filter = "brightness(1.10)";
+    }
+    else if (timeOfDay > 9 || timeOfDay < 12) {
+        document.getElementById('body').style.filter = "brightness(1.25)";
+    }
+    else if (timeOfDay => 12 || timeOfDay < 19) {
+        document.getElementById('body').style.filter = "brightness(1.50)";
+    }
+    else {
+        document.getElementById('body').style.filter = "brightness(75%)";
     }
 }
 
@@ -38,8 +45,13 @@ function attemptLogin() {
         dataType: "json",
         data: JSON.stringify(data),
         success: function(msg) {
-            alert('log-in succesful')
-            navigateToMainSite();
+            if (msg.d) {
+                navigateToMainSite();
+            }
+            else {
+                alert("Log-in failed.");
+            }
+            
         },
         error: function(e) {
             alert('Something went seriously wrong.');

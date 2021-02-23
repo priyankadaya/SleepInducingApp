@@ -16,7 +16,7 @@ function CheckAdmin() {
             var x = document.getElementById("users");
 
             if (responseFromServer == false) {
-                $(x.style.display = "none");
+                x.style.display = "none";
                 
             }
         },
